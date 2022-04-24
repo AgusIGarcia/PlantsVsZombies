@@ -31,7 +31,7 @@ public class Zombie {
     }
 
     public Boolean puedeAvanzar(){
-        return ciclosParaAvanzar == 0;
+        return ciclosParaAvanzar <= 0;
     }
 
     public void avanzar(){

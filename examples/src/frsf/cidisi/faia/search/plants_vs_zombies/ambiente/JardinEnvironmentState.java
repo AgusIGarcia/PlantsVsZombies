@@ -40,7 +40,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     @Override
     public void initState() {
         this.inicializarVariables();
-        //Mejorable
+        // Mejorable
         this.ubicarZombiesIniciales();
     }
 
@@ -108,7 +108,7 @@ public class JardinEnvironmentState extends EnvironmentState {
         Zombie zombie = casilleroActual.getZombie();
         if (zombie != null) {
             zombie.ocurrioCiclo();
-            if (zombie.puedeAvanzar()) {
+            if (zombie.puedeAvanzar() && !this.hayZombieDelante(posicionActual)) {
                 this.avanzarZombie(casilleroActual, posicionActual);
             }
         }
@@ -118,12 +118,18 @@ public class JardinEnvironmentState extends EnvironmentState {
         Zombie zombie = casilleroActual.getZombie();
         zombie.avanzar();
         casilleroActual.setZombie(null);
-        //REVISAR SI HAY GIRASOL O ZOMBIE, FALTÓ
         if (posicionActual.columna == PRIMERA_COLUMNA) {
             this.zombieLlego = true;
         } else {
             this.jardin[posicionActual.fila][posicionActual.columna - 1].setZombie(zombie);
+            this.jardin[posicionActual.fila][posicionActual.columna - 1].setGirasol(null);
         }
+    }
+
+    private Boolean hayZombieDelante(Posicion posicion) {
+        Posicion posicionDelante = new Posicion(posicion.fila, posicion.columna - 1);
+        return this.posicionValida(posicionDelante)
+                && this.jardin[posicionDelante.fila][posicionDelante.columna].getZombie() != null;
     }
 
     private void ubicarZombie() {
