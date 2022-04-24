@@ -8,4 +8,8 @@ public class Posicion {
         this.fila = fila;
         this.columna = columna;
     }
+
+    public boolean equals(Posicion otraPosicion){
+        return this.fila == otraPosicion.fila && this.columna == otraPosicion.columna;
+    }
 }

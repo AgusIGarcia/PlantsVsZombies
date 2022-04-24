@@ -32,19 +32,19 @@ public class JardinEnvironmentState extends EnvironmentState {
     private Boolean zombieLlego;
 
     public JardinEnvironmentState(InicioJuego parametrosInicio) {
-        this.jardin = new Casillero[FILAS_JARDIN][COLUMNAS_JARDIN];
         this.parametrosInicio = parametrosInicio;
         this.ultimaColumna = new UltimaColumna(FILAS_JARDIN);
+        this.initState();
     }
 
     @Override
     public void initState() {
         this.inicializarVariables();
-        // Mejorable
         this.ubicarZombiesIniciales();
     }
 
     private void inicializarVariables() {
+        this.jardin = new Casillero[FILAS_JARDIN][COLUMNAS_JARDIN];
         this.posicionRepollo = this.parametrosInicio.posicionRepollo;
         this.energiaRepollo = this.parametrosInicio.energiaRepollo;
         this.cantidadZombiesInicial = this.parametrosInicio.cantidadZombiesInicial;
@@ -79,7 +79,7 @@ public class JardinEnvironmentState extends EnvironmentState {
                 && posicion.columna < ULTIMA_COLUMNA;
     }
 
-    public void clicloPercepcion() {
+    public void cicloPercepcion() {
         recorrerMapaYActualizar();
     }
 
@@ -96,7 +96,7 @@ public class JardinEnvironmentState extends EnvironmentState {
 
     private void generarSoles(Posicion posicionActual) {
         Casillero casilleroActual = this.jardin[posicionActual.fila][posicionActual.columna];
-        Girasol girasol = casilleroActual.getGirasol();
+        Girasol girasol = casilleroActual.girasol;
         if (girasol != null) {
             girasol.ocurrioCiclo();
             casilleroActual.cantidadDeSoles += girasol.recolectarSoles();
@@ -105,7 +105,7 @@ public class JardinEnvironmentState extends EnvironmentState {
 
     private void moverZombies(Posicion posicionActual) {
         Casillero casilleroActual = this.jardin[posicionActual.fila][posicionActual.columna];
-        Zombie zombie = casilleroActual.getZombie();
+        Zombie zombie = casilleroActual.zombie;
         if (zombie != null) {
             zombie.ocurrioCiclo();
             if (zombie.puedeAvanzar() && !this.hayZombieDelante(posicionActual)) {
@@ -115,21 +115,29 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     private void avanzarZombie(Casillero casilleroActual, Posicion posicionActual) {
-        Zombie zombie = casilleroActual.getZombie();
+        Zombie zombie = casilleroActual.zombie;
         zombie.avanzar();
-        casilleroActual.setZombie(null);
+        casilleroActual.zombie = null;
         if (posicionActual.columna == PRIMERA_COLUMNA) {
             this.zombieLlego = true;
         } else {
-            this.jardin[posicionActual.fila][posicionActual.columna - 1].setZombie(zombie);
-            this.jardin[posicionActual.fila][posicionActual.columna - 1].setGirasol(null);
+            Posicion nuevaPosicion = new Posicion(posicionActual.fila, posicionActual.columna - 1);
+            this.jardin[nuevaPosicion.fila][nuevaPosicion.columna].zombie = zombie;
+            this.jardin[nuevaPosicion.fila][nuevaPosicion.columna].girasol = null;
+            this.zombieAtacaAgenteSiPuede(zombie,nuevaPosicion);
+        }
+    }
+
+    private void zombieAtacaAgenteSiPuede(Zombie zombie, Posicion nuevaPosicion) {
+        if(this.posicionRepollo.equals(nuevaPosicion)){
+            this.energiaRepollo -= zombie.danioAlAgente();
         }
     }
 
     private Boolean hayZombieDelante(Posicion posicion) {
         Posicion posicionDelante = new Posicion(posicion.fila, posicion.columna - 1);
         return this.posicionValida(posicionDelante)
-                && this.jardin[posicionDelante.fila][posicionDelante.columna].getZombie() != null;
+                && this.jardin[posicionDelante.fila][posicionDelante.columna].zombie != null;
     }
 
     private void ubicarZombie() {
@@ -165,5 +173,13 @@ public class JardinEnvironmentState extends EnvironmentState {
 
     public Integer getZombiesEnJuego() {
         return this.zombiesEnJuego;
+    }
+
+    public Integer getEnergiaRepollo(){
+        return this.energiaRepollo;
+    }
+
+    public Integer getCantidadZombiesRestantes() {
+        return this.zombiesEnJuego + this.cantidadZombiesAGenerar;
     }
 }

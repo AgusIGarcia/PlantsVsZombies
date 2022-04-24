@@ -16,6 +16,12 @@ public class Zombie {
         this.reiniciarCiclosParaAvanzar();
     }
 
+    public Zombie(Zombie otroZombie) {
+        this.tipo = otroZombie.tipo;
+        this.vida = otroZombie.vida;
+        this.ciclosParaAvanzar = otroZombie.getCiclosParaAvanzar();
+    }
+
     private void setearTipoZombie() {
         Integer numeroZombieAGenerar = RandomPropio.generarNumeroRandom(1, 6);
         this.tipo = TipoZombie.getTipo(numeroZombieAGenerar);
@@ -36,5 +42,17 @@ public class Zombie {
 
     public void avanzar(){
         this.reiniciarCiclosParaAvanzar();
+    }
+
+    public Integer danioAlAgente(){
+        return this.vida * 2;
+    }
+
+    public boolean equals(Zombie otroZombie){
+        return this.tipo == otroZombie.tipo;
+    }
+
+    public Integer getCiclosParaAvanzar(){
+        return this.ciclosParaAvanzar;
     }
 }

@@ -23,7 +23,7 @@ public class JardinEnvironment extends Environment {
     @Override
     public Perception getPercept() {
 
-        this.getEnvironmentState().clicloPercepcion();
+        this.getEnvironmentState().cicloPercepcion();
         RepolloBoxeadorPerception perception = new RepolloBoxeadorPerception();
         setPercepciones(perception);
 
@@ -46,6 +46,8 @@ public class JardinEnvironment extends Environment {
         perception.setPercepcionCentro(this.getPercepcionCentro(posicionRepollo, jardin));
         perception.setPercepcionIzquierda(this.getPercepcionIzquierda(posicionRepollo, jardin));
         perception.setPercepcionDerecha(this.getPercepcionDerecha(posicionRepollo, jardin));
+        perception.setEnergiaAgente(this.getEnvironmentState().getEnergiaRepollo());
+        perception.setCantidadZombiesRestantes(this.getEnvironmentState().getCantidadZombiesRestantes());
     }
 
     private PercepcionCasillero getPercepcionArriba(Posicion posicionRepollo, Casillero[][] jardin) {

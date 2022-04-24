@@ -3,6 +3,7 @@ package frsf.cidisi.faia.search.plants_vs_zombies.percepciones;
 import frsf.cidisi.faia.agent.Agent;
 import frsf.cidisi.faia.agent.Perception;
 import frsf.cidisi.faia.environment.Environment;
+import frsf.cidisi.faia.search.plants_vs_zombies.ambiente.JardinEnvironment;
 
 public class RepolloBoxeadorPerception extends Perception {
 
@@ -11,12 +12,23 @@ public class RepolloBoxeadorPerception extends Perception {
     private PercepcionCasillero percepcionCentro;
     private PercepcionCasillero percepcionIzquierda;
     private PercepcionCasillero percepcionDerecha;
-    private Integer cantidadZombiesAmbiente;
+    private Integer cantidadZombiesRestantes;
+    private Integer energiaAgente;
 
     @Override
     public void initPerception(Agent agent, Environment environment) {
-        // TODO Auto-generated method stub
+        JardinEnvironment jardin = (JardinEnvironment) environment;
+        this.setValores((RepolloBoxeadorPerception) jardin.getPercept());
+    }
 
+    private void setValores(RepolloBoxeadorPerception percept) {
+        this.percepcionArriba = percept.getPercepcionArriba();
+        this.percepcionAbajo = percept.getPercepcionAbajo();
+        this.percepcionCentro = percept.getPercepcionCentro();
+        this.percepcionIzquierda = percept.getPercepcionIzquierda();
+        this.percepcionDerecha = percept.getPercepcionDerecha();
+        this.cantidadZombiesRestantes = percept.getCantidadZombiesRestantes();
+        this.energiaAgente = percept.getEnergiaAgente();
     }
 
     public PercepcionCasillero getPercepcionArriba() {
@@ -59,12 +71,20 @@ public class RepolloBoxeadorPerception extends Perception {
         this.percepcionDerecha = percepcionDerecha;
     }
 
-    public Integer getCantidadZombiesAmbiente() {
-        return cantidadZombiesAmbiente;
+    public Integer getCantidadZombiesRestantes() {
+        return cantidadZombiesRestantes;
     }
 
-    public void setCantidadZombiesAmbiente(Integer cantidadZombiesAmbiente) {
-        this.cantidadZombiesAmbiente = cantidadZombiesAmbiente;
+    public void setCantidadZombiesRestantes(Integer cantidadZombiesAmbiente) {
+        this.cantidadZombiesRestantes = cantidadZombiesAmbiente;
+    }
+
+    public Integer getEnergiaAgente() {
+        return energiaAgente;
+    }
+
+    public void setEnergiaAgente(Integer energiaAgente) {
+        this.energiaAgente = energiaAgente;
     }
 
 }
