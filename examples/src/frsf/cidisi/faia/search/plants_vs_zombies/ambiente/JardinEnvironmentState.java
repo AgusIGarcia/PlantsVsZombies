@@ -38,12 +38,21 @@ public class JardinEnvironmentState extends EnvironmentState {
 
     @Override
     public void initState() {
-        this.jardin = new Casillero[FILAS_JARDIN][COLUMNAS_JARDIN];
+        this.inicializarJardin();
         this.posicionRepollo = this.parametrosInicio.posicionRepollo;
         this.energiaRepollo = this.parametrosInicio.energiaRepollo;
         this.cantidadZombiesAGenerar = this.parametrosInicio.cantidadZombiesAGenerar;
         this.zombiesEnJuego = 0;
         this.zombieLlego = false;
+    }
+
+    private void inicializarJardin(){
+        this.jardin = new Casillero[FILAS_JARDIN][COLUMNAS_JARDIN];
+        for (int fila = PRIMERA_FILA; fila <= ULTIMA_FILA; fila++) {
+            for (int columna = PRIMERA_COLUMNA; columna <= ULTIMA_COLUMNA; columna++) {
+                this.jardin[fila][columna] = new Casillero();
+            }
+        }
     }
 
     private Boolean insertarZombie() {

@@ -40,12 +40,21 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
 
     @Override
     public void initState() {
-        this.jardin = new Casillero[JardinEnvironmentState.FILAS_JARDIN][JardinEnvironmentState.COLUMNAS_JARDIN];
+        this.inicializarJardin();
         this.posicion = this.parametrosInicio.posicionRepollo;
         this.energia = this.parametrosInicio.energiaRepollo;
-        this.zombiesPorMatar = this.parametrosInicio.cantidadZombiesAGenerar
-                + this.parametrosInicio.cantidadZombiesInicial;
+        this.zombiesPorMatar = this.parametrosInicio.cantidadZombiesAGenerar;
     }
+
+    private void inicializarJardin(){
+        this.jardin = new Casillero[JardinEnvironmentState.FILAS_JARDIN][JardinEnvironmentState.COLUMNAS_JARDIN];
+        for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
+            for (int columna = JardinEnvironmentState.PRIMERA_COLUMNA; columna <= JardinEnvironmentState.ULTIMA_COLUMNA; columna++) {
+                this.jardin[fila][columna] = new Casillero();
+            }
+        }
+    }
+
 
     @Override
     public boolean equals(Object obj) {

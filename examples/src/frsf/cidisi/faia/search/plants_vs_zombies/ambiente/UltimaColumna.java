@@ -14,6 +14,7 @@ public class UltimaColumna {
     public UltimaColumna(Integer cantidadFilas) {
         this.cantidadFilas = cantidadFilas;
         this.posicionesOcupadas = new ArrayList<Boolean>();
+        this.posicionesDisponibles = new ArrayList<Integer>();
         this.inicializarListas();
     }
 

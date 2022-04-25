@@ -14,14 +14,13 @@ public class InicioJuego {
     public Integer energiaRepollo;
 
     public Integer cantidadZombiesAGenerar;
-    public Integer cantidadZombiesInicial;
 
     public InicioJuego() {
         this.posicionRepollo = 
         new Posicion(RandomPropio.generarNumeroRandom(JardinEnvironmentState.PRIMERA_FILA, JardinEnvironmentState.ULTIMA_FILA), JardinEnvironmentState.PRIMERA_COLUMNA);
         this.energiaRepollo = RandomPropio.generarNumeroRandom(CANTIDAD_MINIMA_DE_ENERGIA_INICIAL, CANTIDAD_MAXIMA_DE_ENERGIA_INICIAL);
         this.cantidadZombiesAGenerar = 
-        RandomPropio.generarNumeroRandom(CANTIDAD_MINIMA_DE_ZOMBIES_TOTALES, CANTIDAD_MAXIMA_DE_ZOMBIES_TOTALES) - this.cantidadZombiesInicial;
+        RandomPropio.generarNumeroRandom(CANTIDAD_MINIMA_DE_ZOMBIES_TOTALES, CANTIDAD_MAXIMA_DE_ZOMBIES_TOTALES);
     }
 
 }

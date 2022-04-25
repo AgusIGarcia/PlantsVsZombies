@@ -12,9 +12,9 @@ public class Casillero {
         this.cantidadDeSoles = 0;
     }
 
-    public Casillero(Casillero casilleroACopiar){
-        this.girasol = new Girasol(casilleroACopiar.girasol);
-        this.zombie = new Zombie(casilleroACopiar.zombie);
+    public Casillero(Casillero casilleroACopiar) {
+        this.girasol = casilleroACopiar.girasol == null ? null : new Girasol(casilleroACopiar.girasol);
+        this.zombie = casilleroACopiar.zombie == null ? null : new Zombie(casilleroACopiar.zombie);
         this.cantidadDeSoles = casilleroACopiar.cantidadDeSoles;
     }
 
@@ -22,12 +22,17 @@ public class Casillero {
         return girasol != null || zombie != null || cantidadDeSoles > 0;
     }
 
-    public boolean equals(Casillero otroCasillero){
-        return this.cantidadDeSoles == otroCasillero.cantidadDeSoles && this.equalsGirasoles(otroCasillero.girasol) && this.zombie.equals(otroCasillero.zombie);
+    public boolean equals(Casillero otroCasillero) {
+        return this.cantidadDeSoles == otroCasillero.cantidadDeSoles && this.equalsGirasoles(otroCasillero.girasol)
+                && this.equalsZombies(otroCasillero.zombie);
     }
 
     private boolean equalsGirasoles(Girasol otroGirasol) {
         return (this.girasol == null && otroGirasol == null) || (this.girasol != null && otroGirasol != null);
+    }
+
+    private boolean equalsZombies(Zombie otroZombie) {
+        return ((this.zombie == null && otroZombie == null) || ((this.zombie != null && otroZombie != null) && this.zombie.equals(otroZombie)));
     }
 
 }
