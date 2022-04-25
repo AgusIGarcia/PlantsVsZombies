@@ -22,6 +22,23 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.initState();
     }
 
+    @Override
+    public void initState() {
+        this.inicializarJardin();
+        this.posicion = this.parametrosInicio.posicionRepollo;
+        this.energia = this.parametrosInicio.energiaRepollo;
+        this.zombiesPorMatar = this.parametrosInicio.cantidadZombiesAGenerar;
+    }
+
+    private void inicializarJardin() {
+        this.jardin = new Casillero[JardinEnvironmentState.FILAS_JARDIN][JardinEnvironmentState.COLUMNAS_JARDIN];
+        for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
+            for (int columna = JardinEnvironmentState.PRIMERA_COLUMNA; columna <= JardinEnvironmentState.ULTIMA_COLUMNA; columna++) {
+                this.jardin[fila][columna] = new Casillero();
+            }
+        }
+    }
+
     public RepolloBoxeadorAgentState(RepolloBoxeadorAgentState estado) {
         this.copiarJardin(estado.getJardin());
         this.posicion = new Posicion(estado.getPosicion().fila, estado.getPosicion().columna);
@@ -37,24 +54,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
             }
         }
     }
-
-    @Override
-    public void initState() {
-        this.inicializarJardin();
-        this.posicion = this.parametrosInicio.posicionRepollo;
-        this.energia = this.parametrosInicio.energiaRepollo;
-        this.zombiesPorMatar = this.parametrosInicio.cantidadZombiesAGenerar;
-    }
-
-    private void inicializarJardin(){
-        this.jardin = new Casillero[JardinEnvironmentState.FILAS_JARDIN][JardinEnvironmentState.COLUMNAS_JARDIN];
-        for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
-            for (int columna = JardinEnvironmentState.PRIMERA_COLUMNA; columna <= JardinEnvironmentState.ULTIMA_COLUMNA; columna++) {
-                this.jardin[fila][columna] = new Casillero();
-            }
-        }
-    }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -171,7 +170,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         return this.jardin[this.posicion.fila][this.posicion.columna];
     }
 
-    public Boolean victoria(){
+    public Boolean victoria() {
         return this.zombiesPorMatar == 0 && this.energia > 0;
     }
 }
