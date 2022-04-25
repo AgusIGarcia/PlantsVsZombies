@@ -27,7 +27,6 @@ public class JardinEnvironmentState extends EnvironmentState {
     private Posicion posicionRepollo;
     private Integer energiaRepollo;
     private Integer cantidadZombiesAGenerar;
-    private Integer cantidadZombiesInicial;
     private Integer zombiesEnJuego;
     private Boolean zombieLlego;
 
@@ -39,24 +38,12 @@ public class JardinEnvironmentState extends EnvironmentState {
 
     @Override
     public void initState() {
-        this.inicializarVariables();
-        this.ubicarZombiesIniciales();
-    }
-
-    private void inicializarVariables() {
         this.jardin = new Casillero[FILAS_JARDIN][COLUMNAS_JARDIN];
         this.posicionRepollo = this.parametrosInicio.posicionRepollo;
         this.energiaRepollo = this.parametrosInicio.energiaRepollo;
-        this.cantidadZombiesInicial = this.parametrosInicio.cantidadZombiesInicial;
         this.cantidadZombiesAGenerar = this.parametrosInicio.cantidadZombiesAGenerar;
-        this.zombiesEnJuego = this.cantidadZombiesInicial;
+        this.zombiesEnJuego = 0;
         this.zombieLlego = false;
-    }
-
-    private void ubicarZombiesIniciales() {
-        for (int i = 0; i < this.cantidadZombiesInicial; i++) {
-            this.insertarZombie();
-        }
     }
 
     private Boolean insertarZombie() {
@@ -74,7 +61,7 @@ public class JardinEnvironmentState extends EnvironmentState {
         return null;
     }
 
-    public Boolean posicionValida(Posicion posicion) {
+    public static Boolean posicionValida(Posicion posicion) {
         return posicion.fila >= PRIMERA_FILA && posicion.fila <= ULTIMA_FILA && posicion.columna >= PRIMERA_COLUMNA
                 && posicion.columna < ULTIMA_COLUMNA;
     }
@@ -124,19 +111,19 @@ public class JardinEnvironmentState extends EnvironmentState {
             Posicion nuevaPosicion = new Posicion(posicionActual.fila, posicionActual.columna - 1);
             this.jardin[nuevaPosicion.fila][nuevaPosicion.columna].zombie = zombie;
             this.jardin[nuevaPosicion.fila][nuevaPosicion.columna].girasol = null;
-            this.zombieAtacaAgenteSiPuede(zombie,nuevaPosicion);
+            this.zombieAtacaAgenteSiPuede(zombie, nuevaPosicion);
         }
     }
 
     private void zombieAtacaAgenteSiPuede(Zombie zombie, Posicion nuevaPosicion) {
-        if(this.posicionRepollo.equals(nuevaPosicion)){
+        if (this.posicionRepollo.equals(nuevaPosicion)) {
             this.energiaRepollo -= zombie.danioAlAgente();
         }
     }
 
     private Boolean hayZombieDelante(Posicion posicion) {
         Posicion posicionDelante = new Posicion(posicion.fila, posicion.columna - 1);
-        return this.posicionValida(posicionDelante)
+        return posicionValida(posicionDelante)
                 && this.jardin[posicionDelante.fila][posicionDelante.columna].zombie != null;
     }
 
@@ -156,6 +143,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     private void probarInsertarZombie() {
         if (this.insertarZombie()) {
             this.cantidadZombiesAGenerar--;
+            this.zombiesEnJuego++;
         }
     }
 
@@ -166,6 +154,10 @@ public class JardinEnvironmentState extends EnvironmentState {
     public Posicion getPosicionRepollo() {
         return this.posicionRepollo;
     }
+    
+    public void setPosicionRepollo(Posicion posicionDestino) {
+        this.posicionRepollo = posicionDestino;
+    }
 
     public Casillero[][] getJardin() {
         return this.jardin;
@@ -175,8 +167,21 @@ public class JardinEnvironmentState extends EnvironmentState {
         return this.zombiesEnJuego;
     }
 
-    public Integer getEnergiaRepollo(){
+    public Integer getEnergiaRepollo() {
         return this.energiaRepollo;
+    }
+
+    public void repolloRecolectaSoles(){
+        Casillero casilleroActual = this.jardin[this.posicionRepollo.fila][this.posicionRepollo.columna];
+        this.energiaRepollo += casilleroActual.cantidadDeSoles;
+        casilleroActual.cantidadDeSoles = 0;
+    }
+
+    public void repolloPierdeVidaPostAvanzar(){
+        Casillero casilleroActual = this.jardin[this.posicionRepollo.fila][this.posicionRepollo.columna];
+        if(casilleroActual.zombie != null){
+            this.energiaRepollo -= casilleroActual.zombie.danioAlAgente();
+        }
     }
 
     public Integer getCantidadZombiesRestantes() {

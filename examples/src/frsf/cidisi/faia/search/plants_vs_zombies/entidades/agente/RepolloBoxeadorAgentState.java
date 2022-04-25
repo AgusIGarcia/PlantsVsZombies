@@ -112,12 +112,30 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         return posicion;
     }
 
+    public void setPosicion(Posicion posicionDestino){
+        this.posicion = posicionDestino;
+    }
+
     public Integer getEnergia() {
         return energia;
+    }
+
+    public void recolectarSoles(){
+        Casillero casilleroActual = this.jardin[this.posicion.fila][this.posicion.columna];
+        this.energia+= casilleroActual.cantidadDeSoles;
+        casilleroActual.cantidadDeSoles = 0;
     }
 
     public Integer getZombiesPorMatar() {
         return this.zombiesPorMatar;
     }
+
+    public void perderEnergiaPorZombie() {
+        Casillero casilleroActual = this.jardin[this.posicion.fila][this.posicion.columna];
+        if(casilleroActual.zombie != null){
+            this.energia-= casilleroActual.zombie.danioAlAgente();
+        }
+    }
+
 
 }
