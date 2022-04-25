@@ -17,8 +17,8 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     private Integer zombiesPorMatar;
     private InicioJuego parametrosInicio;
 
-    public RepolloBoxeadorAgentState(InicioJuego inicio) {
-        this.parametrosInicio = inicio;
+    public RepolloBoxeadorAgentState(InicioJuego parametrosInicio) {
+        this.parametrosInicio = parametrosInicio;
         this.initState();
     }
 
