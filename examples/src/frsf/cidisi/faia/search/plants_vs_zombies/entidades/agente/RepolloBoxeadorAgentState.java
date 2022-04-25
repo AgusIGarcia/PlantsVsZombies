@@ -6,6 +6,7 @@ import frsf.cidisi.faia.search.plants_vs_zombies.ambiente.JardinEnvironmentState
 import frsf.cidisi.faia.search.plants_vs_zombies.auxiliares.Casillero;
 import frsf.cidisi.faia.search.plants_vs_zombies.auxiliares.InicioJuego;
 import frsf.cidisi.faia.search.plants_vs_zombies.auxiliares.Posicion;
+import frsf.cidisi.faia.search.plants_vs_zombies.entidades.Girasol;
 import frsf.cidisi.faia.search.plants_vs_zombies.percepciones.PercepcionCasillero;
 import frsf.cidisi.faia.search.plants_vs_zombies.percepciones.RepolloBoxeadorPerception;
 
@@ -26,6 +27,15 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.posicion = new Posicion(estado.getPosicion().fila, estado.getPosicion().columna);
         this.energia = estado.getEnergia();
         this.zombiesPorMatar = estado.getZombiesPorMatar();
+    }
+
+    private void copiarJardin(Casillero[][] jardinACopiar) {
+        this.jardin = new Casillero[JardinEnvironmentState.FILAS_JARDIN][JardinEnvironmentState.COLUMNAS_JARDIN];
+        for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
+            for (int columna = JardinEnvironmentState.PRIMERA_COLUMNA; columna <= JardinEnvironmentState.ULTIMA_FILA; columna++) {
+                this.jardin[fila][columna] = new Casillero(jardinACopiar[fila][columna]);
+            }
+        }
     }
 
     @Override
@@ -71,15 +81,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         return new RepolloBoxeadorAgentState(this);
     }
 
-    private void copiarJardin(Casillero[][] jardinACopiar) {
-        this.jardin = new Casillero[JardinEnvironmentState.FILAS_JARDIN][JardinEnvironmentState.COLUMNAS_JARDIN];
-        for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
-            for (int columna = JardinEnvironmentState.PRIMERA_COLUMNA; columna <= JardinEnvironmentState.ULTIMA_FILA; columna++) {
-                this.jardin[fila][columna] = new Casillero(jardinACopiar[fila][columna]);
-            }
-        }
-    }
-
     @Override
     public void updateState(Perception p) {
         RepolloBoxeadorPerception percepcion = (RepolloBoxeadorPerception) p;
@@ -112,7 +113,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         return posicion;
     }
 
-    public void setPosicion(Posicion posicionDestino){
+    public void setPosicion(Posicion posicionDestino) {
         this.posicion = posicionDestino;
     }
 
@@ -120,10 +121,19 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         return energia;
     }
 
-    public void recolectarSoles(){
-        Casillero casilleroActual = this.jardin[this.posicion.fila][this.posicion.columna];
-        this.energia+= casilleroActual.cantidadDeSoles;
+    public void recolectarSoles() {
+        Casillero casilleroActual = this.getCasilleroActual();
+        this.energia += casilleroActual.cantidadDeSoles;
         casilleroActual.cantidadDeSoles = 0;
+    }
+
+    public Boolean sePuedePlantarGirasol() {
+        return this.getCasilleroActual().girasol == null && this.energia > 0;
+    }
+
+    public void plantarGirasol() {
+        this.getCasilleroActual().girasol = new Girasol();
+        this.energia--;
     }
 
     public Integer getZombiesPorMatar() {
@@ -131,11 +141,28 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     }
 
     public void perderEnergiaPorZombie() {
-        Casillero casilleroActual = this.jardin[this.posicion.fila][this.posicion.columna];
-        if(casilleroActual.zombie != null){
-            this.energia-= casilleroActual.zombie.danioAlAgente();
+        Casillero casilleroActual = this.getCasilleroActual();
+        if (casilleroActual.zombie != null) {
+            this.energia -= casilleroActual.zombie.danioAlAgente();
         }
     }
 
+    public Boolean puedoMatarZombie(Posicion posicionAAtacar) {
+        Casillero casilleroAAtacar = this.jardin[posicionAAtacar.fila][posicionAAtacar.columna];
+        return casilleroAAtacar.zombie != null && this.energia > (casilleroAAtacar.zombie.vida);
+    }
 
+    public void matarZombie(Posicion posicionAAtacar) {
+        Casillero casilleroAAtacar = this.jardin[posicionAAtacar.fila][posicionAAtacar.columna];
+        this.energia -= casilleroAAtacar.zombie.vida;
+        casilleroAAtacar.zombie = null;
+    }
+
+    private Casillero getCasilleroActual() {
+        return this.jardin[this.posicion.fila][this.posicion.columna];
+    }
+
+    public Boolean victoria(){
+        return this.zombiesPorMatar == 0 && this.energia > 0;
+    }
 }

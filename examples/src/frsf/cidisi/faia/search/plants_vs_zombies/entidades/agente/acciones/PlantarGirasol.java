@@ -3,34 +3,36 @@ package frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones;
 import frsf.cidisi.faia.agent.search.SearchAction;
 import frsf.cidisi.faia.agent.search.SearchBasedAgentState;
 import frsf.cidisi.faia.search.plants_vs_zombies.ambiente.JardinEnvironmentState;
-import frsf.cidisi.faia.search.plants_vs_zombies.auxiliares.Posicion;
 import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.RepolloBoxeadorAgentState;
 import frsf.cidisi.faia.state.AgentState;
 import frsf.cidisi.faia.state.EnvironmentState;
 
-public class MoverAbajo extends SearchAction {
+public class PlantarGirasol extends SearchAction {
 
     @Override
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) s;
 
-        Posicion posicionDestino = calcularPosicionDestino(repolloState.getPosicion());
+        repolloState.recolectarSoles();
 
-        return new MoverHelperAgente(posicionDestino, repolloState).execute();
+        if(repolloState.sePuedePlantarGirasol()){
+            repolloState.plantarGirasol();
+        }
+        
+        return repolloState;
     }
 
     @Override
     public EnvironmentState execute(AgentState ast, EnvironmentState est) {
         JardinEnvironmentState jardinState = (JardinEnvironmentState) est;
 
-        Posicion posicionDestino = calcularPosicionDestino(jardinState.getPosicionRepollo());
+        jardinState.repolloRecolectaSoles();
 
-        return new MoverHelperAmbiente(posicionDestino, jardinState).execute();
-    }
+        if(jardinState.sePuedePlantarGirasol()){
+            jardinState.plantarGirasol();
+        }
 
-    private Posicion calcularPosicionDestino(Posicion posicionActual) {
-        Posicion posicionDestino = new Posicion(posicionActual.fila - 1, posicionActual.columna);
-        return posicionDestino;
+        return jardinState;
     }
 
     @Override
@@ -43,4 +45,5 @@ public class MoverAbajo extends SearchAction {
         // TODO Auto-generated method stub
         return null;
     }
+
 }

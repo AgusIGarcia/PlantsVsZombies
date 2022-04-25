@@ -8,29 +8,37 @@ import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.RepolloBoxeado
 import frsf.cidisi.faia.state.AgentState;
 import frsf.cidisi.faia.state.EnvironmentState;
 
-public class MoverAbajo extends SearchAction {
+public class MatarZombieDerecha extends SearchAction {
 
     @Override
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) s;
 
-        Posicion posicionDestino = calcularPosicionDestino(repolloState.getPosicion());
+        Posicion posicionAAtacar = calcularPosicionAAtacar(repolloState.getPosicion());
 
-        return new MoverHelperAgente(posicionDestino, repolloState).execute();
+        repolloState.recolectarSoles();
+
+        if(JardinEnvironmentState.posicionValida(posicionAAtacar) && repolloState.puedoMatarZombie(posicionAAtacar)){
+            repolloState.matarZombie(posicionAAtacar);
+        }
+        
+        return repolloState;
     }
 
+    
     @Override
     public EnvironmentState execute(AgentState ast, EnvironmentState est) {
         JardinEnvironmentState jardinState = (JardinEnvironmentState) est;
 
-        Posicion posicionDestino = calcularPosicionDestino(jardinState.getPosicionRepollo());
+        Posicion posicionAAtacar = calcularPosicionAAtacar(jardinState.getPosicionRepollo());
 
-        return new MoverHelperAmbiente(posicionDestino, jardinState).execute();
-    }
+        jardinState.repolloRecolectaSoles();
 
-    private Posicion calcularPosicionDestino(Posicion posicionActual) {
-        Posicion posicionDestino = new Posicion(posicionActual.fila - 1, posicionActual.columna);
-        return posicionDestino;
+        if(JardinEnvironmentState.posicionValida(posicionAAtacar) && jardinState.repolloPuedeMatarZombie(posicionAAtacar)){
+            jardinState.matarZombie(posicionAAtacar);
+        }
+
+        return jardinState;
     }
 
     @Override
@@ -42,5 +50,10 @@ public class MoverAbajo extends SearchAction {
     public String toString() {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    private Posicion calcularPosicionAAtacar(Posicion posicionActual) {
+        Posicion posicionAAtacar = new Posicion(posicionActual.fila, posicionActual.columna + 1);
+        return posicionAAtacar;
     }
 }

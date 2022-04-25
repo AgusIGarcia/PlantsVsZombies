@@ -15,9 +15,10 @@ public class MoverHelperAgente {
     }
 
     public RepolloBoxeadorAgentState execute(){
+
+        preMovimiento();
         
         if (JardinEnvironmentState.posicionValida(posicionDestino)) {
-            preMovimiento();
             actualizarPosicionAgente();
             postMovimiento();
         }

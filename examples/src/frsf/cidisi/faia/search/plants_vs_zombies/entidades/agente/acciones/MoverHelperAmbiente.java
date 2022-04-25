@@ -14,9 +14,10 @@ public class MoverHelperAmbiente {
     }
 
     public JardinEnvironmentState execute(){
+
+        preMovimiento();
         
         if (JardinEnvironmentState.posicionValida(posicionDestino)) {
-            preMovimiento();
             actualizarPosicionAgente();
             postMovimiento();
         }

@@ -29,7 +29,7 @@ public class MoverDerecha extends SearchAction {
     }
 
     private Posicion calcularPosicionDestino(Posicion posicionActual) {
-        Posicion posicionDestino = new Posicion(posicionActual.fila + 1, posicionActual.columna);
+        Posicion posicionDestino = new Posicion(posicionActual.fila, posicionActual.columna + 1);
         return posicionDestino;
     }
 

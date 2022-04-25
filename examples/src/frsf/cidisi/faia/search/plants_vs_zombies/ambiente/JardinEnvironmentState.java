@@ -172,16 +172,40 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     public void repolloRecolectaSoles(){
-        Casillero casilleroActual = this.jardin[this.posicionRepollo.fila][this.posicionRepollo.columna];
+        Casillero casilleroActual = getCasilleroRepollo();
         this.energiaRepollo += casilleroActual.cantidadDeSoles;
         casilleroActual.cantidadDeSoles = 0;
     }
 
+    public Boolean sePuedePlantarGirasol(){
+        return this.getCasilleroRepollo().girasol == null && this.energiaRepollo > 0;
+    }
+
+    public void plantarGirasol(){
+        this.getCasilleroRepollo().girasol = new Girasol();
+        this.energiaRepollo--;
+    }
+
     public void repolloPierdeVidaPostAvanzar(){
-        Casillero casilleroActual = this.jardin[this.posicionRepollo.fila][this.posicionRepollo.columna];
+        Casillero casilleroActual = getCasilleroRepollo();
         if(casilleroActual.zombie != null){
             this.energiaRepollo -= casilleroActual.zombie.danioAlAgente();
         }
+    }
+
+    public Boolean repolloPuedeMatarZombie(Posicion posicionAAtacar) {
+        Casillero casilleroAAtacar = this.jardin[posicionAAtacar.fila][posicionAAtacar.columna];
+        return casilleroAAtacar.zombie != null && this.energiaRepollo > (casilleroAAtacar.zombie.vida);
+    }
+
+    public void matarZombie(Posicion posicionAAtacar) {
+        Casillero casilleroAAtacar = this.jardin[posicionAAtacar.fila][posicionAAtacar.columna];
+        this.energiaRepollo -= casilleroAAtacar.zombie.vida;
+        casilleroAAtacar.zombie = null;
+    }
+
+    private Casillero getCasilleroRepollo() {
+        return this.jardin[this.posicionRepollo.fila][this.posicionRepollo.columna];
     }
 
     public Integer getCantidadZombiesRestantes() {
