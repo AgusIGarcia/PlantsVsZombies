@@ -160,6 +160,10 @@ public class JardinEnvironmentState extends EnvironmentState {
         return this.zombieLlego || this.energiaRepollo <= 0;
     }
 
+    public boolean winAgente() {
+        return this.getCantidadZombiesRestantes() == 0 && !pruebaDeFallo();
+    }
+
     public Posicion getPosicionRepollo() {
         return this.posicionRepollo;
     }
@@ -187,7 +191,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     public Boolean sePuedePlantarGirasol(){
-        return this.getCasilleroRepollo().girasol == null && this.energiaRepollo > 0;
+        return this.getCasilleroRepollo().girasol == null && this.getCasilleroRepollo().zombie != null&& this.energiaRepollo > 0;
     }
 
     public void plantarGirasol(){

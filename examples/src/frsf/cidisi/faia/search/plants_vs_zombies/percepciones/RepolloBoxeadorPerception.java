@@ -12,7 +12,6 @@ public class RepolloBoxeadorPerception extends Perception {
     private PercepcionCasillero percepcionCentro;
     private PercepcionCasillero percepcionIzquierda;
     private PercepcionCasillero percepcionDerecha;
-    private Integer cantidadZombiesRestantes;
     private Integer energiaAgente;
 
     @Override
@@ -27,7 +26,6 @@ public class RepolloBoxeadorPerception extends Perception {
         this.percepcionCentro = percept.getPercepcionCentro();
         this.percepcionIzquierda = percept.getPercepcionIzquierda();
         this.percepcionDerecha = percept.getPercepcionDerecha();
-        this.cantidadZombiesRestantes = percept.getCantidadZombiesRestantes();
         this.energiaAgente = percept.getEnergiaAgente();
     }
 
@@ -69,14 +67,6 @@ public class RepolloBoxeadorPerception extends Perception {
 
     public void setPercepcionDerecha(PercepcionCasillero percepcionDerecha) {
         this.percepcionDerecha = percepcionDerecha;
-    }
-
-    public Integer getCantidadZombiesRestantes() {
-        return cantidadZombiesRestantes;
-    }
-
-    public void setCantidadZombiesRestantes(Integer cantidadZombiesAmbiente) {
-        this.cantidadZombiesRestantes = cantidadZombiesAmbiente;
     }
 
     public Integer getEnergiaAgente() {

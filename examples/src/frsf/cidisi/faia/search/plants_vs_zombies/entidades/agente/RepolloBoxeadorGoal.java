@@ -8,7 +8,7 @@ public class RepolloBoxeadorGoal extends GoalTest {
     @Override
     public boolean isGoalState(AgentState agentState) {
         RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) agentState;
-        return repolloState.victoria();
+        return repolloState.objetivoCumplido();
     }
 
 }

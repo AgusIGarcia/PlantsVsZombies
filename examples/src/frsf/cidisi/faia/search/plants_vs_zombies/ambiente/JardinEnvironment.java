@@ -34,6 +34,10 @@ public class JardinEnvironment extends Environment {
     public boolean agentFailed(Action actionReturned) {
         return this.getEnvironmentState().pruebaDeFallo();
     }
+
+    public boolean esWinAgente(){
+        return this.getEnvironmentState().winAgente();
+    }
     
 
     private void setPercepciones(RepolloBoxeadorPerception perception) {
@@ -47,7 +51,6 @@ public class JardinEnvironment extends Environment {
         perception.setPercepcionIzquierda(this.getPercepcionIzquierda(posicionRepollo, jardin));
         perception.setPercepcionDerecha(this.getPercepcionDerecha(posicionRepollo, jardin));
         perception.setEnergiaAgente(this.getEnvironmentState().getEnergiaRepollo());
-        perception.setCantidadZombiesRestantes(this.getEnvironmentState().getCantidadZombiesRestantes());
     }
 
     private PercepcionCasillero getPercepcionArriba(Posicion posicionRepollo, Casillero[][] jardin) {

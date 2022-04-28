@@ -14,7 +14,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     private Casillero[][] jardin;
     private Posicion posicion;
     private Integer energia;
-    private Integer zombiesPorMatar;
+    private Integer zombiesEnElAmbiente;
     private InicioJuego parametrosInicio;
 
     public RepolloBoxeadorAgentState(InicioJuego parametrosInicio) {
@@ -27,7 +27,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.inicializarJardin();
         this.posicion = this.parametrosInicio.posicionRepollo;
         this.energia = this.parametrosInicio.energiaRepollo;
-        this.zombiesPorMatar = this.parametrosInicio.cantidadZombiesAGenerar;
+        this.zombiesEnElAmbiente = 0;
     }
 
     private void inicializarJardin() {
@@ -43,7 +43,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.copiarJardin(estado.getJardin());
         this.posicion = new Posicion(estado.getPosicion().fila, estado.getPosicion().columna);
         this.energia = estado.getEnergia();
-        this.zombiesPorMatar = estado.getZombiesPorMatar();
+        this.zombiesEnElAmbiente = estado.getZombiesPorMatar();
     }
 
     private void copiarJardin(Casillero[][] jardinACopiar) {
@@ -98,13 +98,25 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.consumirPercepcion(percepcion.getPercepcionIzquierda());
         this.consumirPercepcion(percepcion.getPercepcionDerecha());
         this.energia = percepcion.getEnergiaAgente();
-        this.zombiesPorMatar = percepcion.getCantidadZombiesRestantes();
+        this.zombiesEnElAmbiente = this.getCantidadZombiesPercibidos();
     }
 
     private void consumirPercepcion(PercepcionCasillero percepcion) {
         if (percepcion != null) {
             this.jardin[percepcion.posicion.fila][percepcion.posicion.columna] = percepcion.casillero;
         }
+    }
+
+    private Integer getCantidadZombiesPercibidos() {
+        Integer cantidadZombies = 0;
+        for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
+            for (int columna = JardinEnvironmentState.PRIMERA_COLUMNA; columna <= JardinEnvironmentState.ULTIMA_COLUMNA; columna++) {
+                if (this.jardin[fila][columna].zombie != null) {
+                    cantidadZombies++;
+                }
+            }
+        }
+        return cantidadZombies;
     }
 
     @Override
@@ -136,7 +148,8 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     }
 
     public Boolean sePuedePlantarGirasol() {
-        return this.getCasilleroActual().girasol == null && this.energia > 0;
+        return this.getCasilleroActual().girasol == null && this.getCasilleroActual().zombie != null
+                && this.energia > 0;
     }
 
     public void plantarGirasol() {
@@ -145,7 +158,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     }
 
     public Integer getZombiesPorMatar() {
-        return this.zombiesPorMatar;
+        return this.zombiesEnElAmbiente;
     }
 
     public void perderEnergiaPorZombie() {
@@ -170,7 +183,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         return this.jardin[this.posicion.fila][this.posicion.columna];
     }
 
-    public Boolean victoria() {
-        return this.zombiesPorMatar == 0 && this.energia > 0;
+    public Boolean objetivoCumplido() {
+        return this.zombiesEnElAmbiente == 0 && this.energia > 0;
     }
 }
