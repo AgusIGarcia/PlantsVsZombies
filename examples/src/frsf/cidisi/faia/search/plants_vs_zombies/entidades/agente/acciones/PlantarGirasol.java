@@ -17,22 +17,27 @@ public class PlantarGirasol extends SearchAction {
 
         if(repolloState.sePuedePlantarGirasol()){
             repolloState.plantarGirasol();
+            return repolloState;
         }
         
-        return repolloState;
+        return null;
     }
 
     @Override
     public EnvironmentState execute(AgentState ast, EnvironmentState est) {
         JardinEnvironmentState jardinState = (JardinEnvironmentState) est;
+        RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) ast;
 
         jardinState.repolloRecolectaSoles();
+        repolloState.recolectarSoles();
 
         if(jardinState.sePuedePlantarGirasol()){
+            repolloState.plantarGirasol();
             jardinState.plantarGirasol();
+            return jardinState;
         }
 
-        return jardinState;
+        return null;
     }
 
     @Override
@@ -42,8 +47,7 @@ public class PlantarGirasol extends SearchAction {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        return "PlantarGirasol";
     }
 
 }

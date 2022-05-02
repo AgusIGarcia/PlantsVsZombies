@@ -20,25 +20,30 @@ public class MatarZombieDerecha extends SearchAction {
 
         if(JardinEnvironmentState.posicionValida(posicionAAtacar) && repolloState.puedoMatarZombie(posicionAAtacar)){
             repolloState.matarZombie(posicionAAtacar);
+            return repolloState;
         }
         
-        return repolloState;
+        return null;
     }
 
     
     @Override
     public EnvironmentState execute(AgentState ast, EnvironmentState est) {
+        RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) ast;
         JardinEnvironmentState jardinState = (JardinEnvironmentState) est;
 
         Posicion posicionAAtacar = calcularPosicionAAtacar(jardinState.getPosicionRepollo());
 
         jardinState.repolloRecolectaSoles();
+        repolloState.recolectarSoles();
 
         if(JardinEnvironmentState.posicionValida(posicionAAtacar) && jardinState.repolloPuedeMatarZombie(posicionAAtacar)){
             jardinState.matarZombie(posicionAAtacar);
+            repolloState.matarZombie(posicionAAtacar);
+            return jardinState;
         }
 
-        return jardinState;
+        return null;
     }
 
     @Override
@@ -48,8 +53,7 @@ public class MatarZombieDerecha extends SearchAction {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        return "MatarZombieDerecha";
     }
     
     private Posicion calcularPosicionAAtacar(Posicion posicionActual) {

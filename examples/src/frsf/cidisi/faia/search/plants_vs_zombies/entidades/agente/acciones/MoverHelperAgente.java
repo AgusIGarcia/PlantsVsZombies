@@ -21,9 +21,10 @@ public class MoverHelperAgente {
         if (JardinEnvironmentState.posicionValida(posicionDestino)) {
             actualizarPosicionAgente();
             postMovimiento();
+            return this.repolloState;
         }
 
-        return this.repolloState;
+        return null;
     }
 
     public void preMovimiento(){
@@ -38,5 +39,6 @@ public class MoverHelperAgente {
     private void postMovimiento() {
         this.repolloState.recolectarSoles();
         this.repolloState.perderEnergiaPorZombie();
+        this.repolloState.actualizarFilasVisitadas();
     }
 }

@@ -21,11 +21,18 @@ public class MoverIzquierda extends SearchAction {
 
     @Override
     public EnvironmentState execute(AgentState ast, EnvironmentState est) {
+        RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) ast;
         JardinEnvironmentState jardinState = (JardinEnvironmentState) est;
 
         Posicion posicionDestino = calcularPosicionDestino(jardinState.getPosicionRepollo());
 
-        return new MoverHelperAmbiente(posicionDestino, jardinState).execute();
+        JardinEnvironmentState moverHelperAmbiente = new MoverHelperAmbiente(posicionDestino, jardinState).execute();
+
+        if (moverHelperAmbiente != null){
+            new MoverHelperAgente(posicionDestino, repolloState).execute();
+        }
+        
+        return moverHelperAmbiente;
     }
 
     private Posicion calcularPosicionDestino(Posicion posicionActual) {
@@ -40,7 +47,6 @@ public class MoverIzquierda extends SearchAction {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        return "MoverIzquierda";
     }
 }

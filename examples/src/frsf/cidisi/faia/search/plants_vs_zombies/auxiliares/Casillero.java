@@ -34,5 +34,23 @@ public class Casillero {
     private boolean equalsZombies(Zombie otroZombie) {
         return ((this.zombie == null && otroZombie == null) || ((this.zombie != null && otroZombie != null) && this.zombie.equals(otroZombie)));
     }
-
+    
+    @Override
+    public String toString(){
+        String result = "";
+        if(this.girasol != null){
+            result += "G, ";
+        }
+        else {
+            result += "_, ";
+        }
+        if(this.zombie != null){
+            result += "Z, ";
+        }
+        else {
+            result += "_, ";
+        }
+        result += cantidadDeSoles;
+        return result;
+    }
 }

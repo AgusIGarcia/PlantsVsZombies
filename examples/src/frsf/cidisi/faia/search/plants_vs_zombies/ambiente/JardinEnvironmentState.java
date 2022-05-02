@@ -46,7 +46,7 @@ public class JardinEnvironmentState extends EnvironmentState {
         this.zombieLlego = false;
     }
 
-    private void inicializarJardin(){
+    private void inicializarJardin() {
         this.jardin = new Casillero[FILAS_JARDIN][COLUMNAS_JARDIN];
         for (int fila = PRIMERA_FILA; fila <= ULTIMA_FILA; fila++) {
             for (int columna = PRIMERA_COLUMNA; columna <= ULTIMA_COLUMNA; columna++) {
@@ -66,13 +66,30 @@ public class JardinEnvironmentState extends EnvironmentState {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        String result = "Vista jardin ambiente: \n";
+        result += "------------------------------------------------------------------------------------------------------------------";
+        result += "\n";
+        for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
+            for (int columna = JardinEnvironmentState.PRIMERA_COLUMNA; columna <= JardinEnvironmentState.ULTIMA_COLUMNA; columna++) {
+                if (this.posicionRepollo.fila == fila && this.posicionRepollo.columna == columna) {
+                    result += "(P," + this.jardin[fila][columna].toString() + ")";
+                } else {
+                    result += "(_," + this.jardin[fila][columna].toString() + ")";
+                }
+            }
+            result += "\n";
+        }
+        result += "------------------------------------------------------------------------------------------------------------------";
+        result += "\n";
+        result += "Energía repollo: " + this.energiaRepollo + "\n";
+        result += "Zombies por generar: " + this.cantidadZombiesAGenerar + "\n";
+        result += "Zombies en ambiente: " + this.zombiesEnJuego + "\n";
+        return result;
     }
 
     public static Boolean posicionValida(Posicion posicion) {
         return posicion.fila >= PRIMERA_FILA && posicion.fila <= ULTIMA_FILA && posicion.columna >= PRIMERA_COLUMNA
-                && posicion.columna < ULTIMA_COLUMNA;
+                && posicion.columna <= ULTIMA_COLUMNA;
     }
 
     public void cicloPercepcion() {
@@ -167,7 +184,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     public Posicion getPosicionRepollo() {
         return this.posicionRepollo;
     }
-    
+
     public void setPosicionRepollo(Posicion posicionDestino) {
         this.posicionRepollo = posicionDestino;
     }
@@ -184,24 +201,25 @@ public class JardinEnvironmentState extends EnvironmentState {
         return this.energiaRepollo;
     }
 
-    public void repolloRecolectaSoles(){
+    public void repolloRecolectaSoles() {
         Casillero casilleroActual = getCasilleroRepollo();
         this.energiaRepollo += casilleroActual.cantidadDeSoles;
         casilleroActual.cantidadDeSoles = 0;
     }
 
-    public Boolean sePuedePlantarGirasol(){
-        return this.getCasilleroRepollo().girasol == null && this.getCasilleroRepollo().zombie != null&& this.energiaRepollo > 0;
+    public Boolean sePuedePlantarGirasol() {
+        return this.getCasilleroRepollo().girasol == null && this.getCasilleroRepollo().zombie != null
+                && this.energiaRepollo > 0;
     }
 
-    public void plantarGirasol(){
+    public void plantarGirasol() {
         this.getCasilleroRepollo().girasol = new Girasol();
         this.energiaRepollo--;
     }
 
-    public void repolloPierdeVidaPostAvanzar(){
+    public void repolloPierdeVidaPostAvanzar() {
         Casillero casilleroActual = getCasilleroRepollo();
-        if(casilleroActual.zombie != null){
+        if (casilleroActual.zombie != null) {
             this.energiaRepollo -= casilleroActual.zombie.danioAlAgente();
         }
     }
@@ -214,7 +232,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     public void matarZombie(Posicion posicionAAtacar) {
         Casillero casilleroAAtacar = this.jardin[posicionAAtacar.fila][posicionAAtacar.columna];
         this.energiaRepollo -= casilleroAAtacar.zombie.vida;
-        casilleroAAtacar.zombie = null;
+        this.zombiesEnJuego--;
     }
 
     private Casillero getCasilleroRepollo() {

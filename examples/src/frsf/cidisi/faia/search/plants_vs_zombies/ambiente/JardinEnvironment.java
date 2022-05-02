@@ -114,4 +114,9 @@ public class JardinEnvironment extends Environment {
         return percepcion;
     }
 
+    @Override
+    public String toString(){
+        return this.environmentState.toString();
+    }
+
 }

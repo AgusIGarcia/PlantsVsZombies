@@ -32,15 +32,16 @@ public class RepolloBoxeadorAgent extends SearchBasedAgent {
         this.setAgentState(repolloState);
 
         Vector<SearchAction> operators = new Vector<SearchAction>();
+
         operators.add(new PlantarGirasol());
+        operators.add(new MatarZombieArriba());
+        operators.add(new MatarZombieAbajo());
+        operators.add(new MatarZombieDerecha());
+        operators.add(new MatarZombieIzquierda());
+        operators.add(new MoverDerecha());
         operators.add(new MoverArriba());
         operators.add(new MoverAbajo());
         operators.add(new MoverIzquierda());
-        operators.add(new MoverDerecha());
-        operators.add(new MatarZombieArriba());
-        operators.add(new MatarZombieAbajo());
-        operators.add(new MatarZombieIzquierda());
-        operators.add(new MatarZombieDerecha());
 
         Problem problem = new Problem(goal, repolloState, operators);
         this.setProblem(problem);

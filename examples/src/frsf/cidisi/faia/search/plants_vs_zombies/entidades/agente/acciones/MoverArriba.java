@@ -21,15 +21,22 @@ public class MoverArriba extends SearchAction {
 
     @Override
     public EnvironmentState execute(AgentState ast, EnvironmentState est) {
+        RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) ast;
         JardinEnvironmentState jardinState = (JardinEnvironmentState) est;
 
         Posicion posicionDestino = calcularPosicionDestino(jardinState.getPosicionRepollo());
 
-        return new MoverHelperAmbiente(posicionDestino, jardinState).execute();
+        JardinEnvironmentState moverHelperAmbiente = new MoverHelperAmbiente(posicionDestino, jardinState).execute();
+
+        if (moverHelperAmbiente != null){
+            new MoverHelperAgente(posicionDestino, repolloState).execute();
+        }
+        
+        return moverHelperAmbiente;
     }
 
     private Posicion calcularPosicionDestino(Posicion posicionActual) {
-        Posicion posicionDestino = new Posicion(posicionActual.fila + 1, posicionActual.columna);
+        Posicion posicionDestino = new Posicion(posicionActual.fila - 1, posicionActual.columna);
         return posicionDestino;
     }
 
@@ -40,7 +47,6 @@ public class MoverArriba extends SearchAction {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        return "MoverArriba";
     }
 }
