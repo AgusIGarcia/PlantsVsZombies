@@ -76,12 +76,12 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     private void copiarFilasVisitadas(Boolean[] filasVisitadasACopiar) {
         this.filasVisitadas = new Boolean[JardinEnvironmentState.FILAS_JARDIN];
         for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
-            if(filasVisitadasACopiar[fila]){
+            if (filasVisitadasACopiar[fila]) {
                 this.filasVisitadas[fila] = true;
-            }else{
+            } else {
                 this.filasVisitadas[fila] = false;
             }
-            
+
         }
     }
 
@@ -180,6 +180,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
 
     private void reiniciarFilasVisitadas() {
         if (this.todasLasFilasVisitadas()) {
+            // if (this.primerYUltimaFilaVisitada()) {
             this.inicializarFilasVisitadas();
         }
     }
@@ -243,7 +244,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     }
 
     public Boolean sePuedePlantarGirasol() {
-        return this.getCasilleroActual().girasol == null && this.getCasilleroActual().zombie != null
+        return this.getCasilleroActual().girasol == null && this.getCasilleroActual().zombie == null
                 && this.energia > 0;
     }
 
@@ -289,12 +290,17 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
                                                                                                    // >= 5;
     }
 
-    private boolean todasLasFilasVisitadas() {
+    private Boolean todasLasFilasVisitadas() {
         for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
             if (!this.filasVisitadas[fila])
                 return false;
         }
         return true;
     }
+
+    // private Boolean primerYUltimaFilaVisitada() {
+    // return this.filasVisitadas[JardinEnvironmentState.PRIMERA_FILA]
+    // && this.filasVisitadas[JardinEnvironmentState.ULTIMA_FILA];
+    // }
 
 }

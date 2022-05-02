@@ -4,7 +4,7 @@ import frsf.cidisi.faia.search.plants_vs_zombies.ambiente.JardinEnvironmentState
 import frsf.cidisi.faia.search.plants_vs_zombies.auxiliares.Posicion;
 
 public class MoverHelperAmbiente {
-    
+
     private Posicion posicionDestino;
     private JardinEnvironmentState jardinState;
 
@@ -13,11 +13,11 @@ public class MoverHelperAmbiente {
         this.jardinState = jardinState;
     }
 
-    public JardinEnvironmentState execute(){
+    public JardinEnvironmentState execute() {
 
         preMovimiento();
-        
-        if (JardinEnvironmentState.posicionValida(posicionDestino)) {
+
+        if (JardinEnvironmentState.posicionValida(posicionDestino) && this.jardinState.getEnergiaRepollo() > 0) {
             actualizarPosicionAgente();
             postMovimiento();
             return this.jardinState;
@@ -26,7 +26,7 @@ public class MoverHelperAmbiente {
         return null;
     }
 
-    public void preMovimiento(){
+    public void preMovimiento() {
         this.jardinState.repolloRecolectaSoles();
     }
 

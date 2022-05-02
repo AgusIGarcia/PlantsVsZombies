@@ -19,6 +19,7 @@ import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.Mover
 import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.MoverDerecha;
 import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.MoverIzquierda;
 import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.PlantarGirasol;
+import frsf.cidisi.faia.solver.search.BreathFirstSearch;
 import frsf.cidisi.faia.solver.search.DepthFirstSearch;
 import frsf.cidisi.faia.solver.search.Search;
 
@@ -38,9 +39,9 @@ public class RepolloBoxeadorAgent extends SearchBasedAgent {
         operators.add(new MatarZombieAbajo());
         operators.add(new MatarZombieDerecha());
         operators.add(new MatarZombieIzquierda());
-        operators.add(new MoverDerecha());
         operators.add(new MoverArriba());
         operators.add(new MoverAbajo());
+        operators.add(new MoverDerecha());
         operators.add(new MoverIzquierda());
 
         Problem problem = new Problem(goal, repolloState, operators);
@@ -55,8 +56,8 @@ public class RepolloBoxeadorAgent extends SearchBasedAgent {
     @Override
     public Action selectAction() {
         // Create the search strategy
-        DepthFirstSearch strategy = new DepthFirstSearch();
-
+        //DepthFirstSearch strategy = new DepthFirstSearch();
+        BreathFirstSearch strategy = new BreathFirstSearch();
         /**
          * Another search strategy examples:
          * 

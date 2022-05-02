@@ -208,7 +208,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     public Boolean sePuedePlantarGirasol() {
-        return this.getCasilleroRepollo().girasol == null && this.getCasilleroRepollo().zombie != null
+        return this.getCasilleroRepollo().girasol == null && this.getCasilleroRepollo().zombie == null
                 && this.energiaRepollo > 0;
     }
 
