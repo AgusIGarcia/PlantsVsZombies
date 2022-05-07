@@ -15,6 +15,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     private Posicion posicion;
     private Integer energia;
     private Integer zombiesEnElAmbiente;
+    private Integer vidaZombiesPercibidos;
     private InicioJuego parametrosInicio;
     private Boolean[] filasVisitadas;
     // private Integer girasolesPlantados;
@@ -30,6 +31,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.posicion = this.parametrosInicio.posicionRepollo;
         this.energia = this.parametrosInicio.energiaRepollo;
         this.zombiesEnElAmbiente = 0;
+        this.vidaZombiesPercibidos = 0;
         // this.girasolesPlantados = 0;
         this.inicializarFilasVisitadas();
     }
@@ -60,6 +62,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.posicion = new Posicion(estado.getPosicion().fila, estado.getPosicion().columna);
         this.energia = estado.getEnergia();
         this.zombiesEnElAmbiente = estado.getZombiesPorMatar();
+        this.vidaZombiesPercibidos = estado.getVidaZombiesPercibidos();
         this.copiarFilasVisitadas(estado.getFilasVisitadas());
         // this.girasolesPlantados = estado.girasolesPlantados;
     }
@@ -92,9 +95,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
 
     public boolean equals(RepolloBoxeadorAgentState otroEstado) {
         return this.posicionesIguales(otroEstado.getPosicion()) && this.energiaIgual(otroEstado.getEnergia()) &&
-                this.filasVisitadasIguales(otroEstado.getFilasVisitadas()) // &&
-                                                                           // this.girasolesPlantadosIguales(otroEstado.getGirasolesPlantados())
-                && this.jardinesIguales(otroEstado.getJardin());
+                this.filasVisitadasIguales(otroEstado.getFilasVisitadas()) && this.jardinesIguales(otroEstado.getJardin());
     }
 
     private boolean posicionesIguales(Posicion otraPosicion) {
@@ -143,7 +144,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.consumirPercepcionDerecha(percepcion.getPercepcionDerecha());
         this.consumirPercepcion(percepcion.getPercepcionCentro());
         this.energia = percepcion.getEnergiaAgente();
-        this.zombiesEnElAmbiente = this.getCantidadZombiesPercibidos();
+        this.actualizarZombiesPercibidos();
         // this.girasolesPlantados = this.getCantidadGirasolesPercibidos();
         reiniciarFilasVisitadas();
     }
@@ -155,10 +156,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
                 this.limpiarCasillerosArriba(posicionAActualizar);
             }
             this.consumirPercepcion(percepcion);
-            posicionAActualizar.fila--;
-            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
-                this.limpiarCasillerosArriba(posicionAActualizar);
-            }
         } else {
             while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
                 this.limpiarCasillerosArriba(posicionAActualizar);
@@ -178,10 +175,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
                 limpiarCasillerosAbajo(posicionAActualizar);
             }
             this.consumirPercepcion(percepcion);
-            posicionAActualizar.fila++;
-            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
-                limpiarCasillerosAbajo(posicionAActualizar);
-            }
         } else {
             while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
                 limpiarCasillerosAbajo(posicionAActualizar);
@@ -201,10 +194,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
                 this.limpiarCasillerosIzquierda(posicionAActualizar);
             }
             this.consumirPercepcion(percepcion);
-            posicionAActualizar.columna--;
-            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
-                this.limpiarCasillerosIzquierda(posicionAActualizar);
-            }
         } else {
             while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
                 this.limpiarCasillerosIzquierda(posicionAActualizar);
@@ -249,16 +238,19 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.jardin[percepcion.posicion.fila][percepcion.posicion.columna] = percepcion.casillero;
     }
 
-    private Integer getCantidadZombiesPercibidos() {
+    private void actualizarZombiesPercibidos() {
         Integer cantidadZombies = 0;
+        Integer vidaZombies = 0;
         for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
             for (int columna = JardinEnvironmentState.PRIMERA_COLUMNA; columna <= JardinEnvironmentState.ULTIMA_COLUMNA; columna++) {
                 if (this.jardin[fila][columna].zombie != null) {
                     cantidadZombies++;
+                    vidaZombies+= this.jardin[fila][columna].zombie.vida;
                 }
             }
         }
-        return cantidadZombies;
+        this.zombiesEnElAmbiente = cantidadZombies;
+        this.vidaZombiesPercibidos = vidaZombies;
     }
 
     private Integer getCantidadGirasolesPercibidos() {
@@ -299,6 +291,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         result += "\n";
         result += "Energía: " + this.energia + "\n";
         result += "Zombies detectados: " + this.zombiesEnElAmbiente + "\n";
+        result += "Suma vida zombies: " + this.vidaZombiesPercibidos + "\n";
         result += "Filas visitadas: " + "\n";
         for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
             if (this.filasVisitadas[fila]) {
@@ -354,6 +347,10 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
 
     public Integer getZombiesPorMatar() {
         return this.zombiesEnElAmbiente;
+    }
+
+    public Integer getVidaZombiesPercibidos(){
+        return this.vidaZombiesPercibidos;
     }
 
     public void perderEnergiaPorZombie() {
