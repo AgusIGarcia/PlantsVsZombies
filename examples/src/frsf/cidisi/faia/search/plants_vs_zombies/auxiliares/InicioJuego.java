@@ -4,8 +4,8 @@ import frsf.cidisi.faia.search.plants_vs_zombies.ambiente.JardinEnvironmentState
 
 public class InicioJuego {
 
-    private static final Integer CANTIDAD_MINIMA_DE_ENERGIA_INICIAL = 100;
-    private static final Integer CANTIDAD_MAXIMA_DE_ENERGIA_INICIAL = 100;
+    private static final Integer CANTIDAD_MINIMA_DE_ENERGIA_INICIAL = 2;
+    private static final Integer CANTIDAD_MAXIMA_DE_ENERGIA_INICIAL = 20;
 
     private static final Integer CANTIDAD_MINIMA_DE_ZOMBIES_TOTALES = 5;
     private static final Integer CANTIDAD_MAXIMA_DE_ZOMBIES_TOTALES = 20;
