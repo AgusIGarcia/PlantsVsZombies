@@ -55,13 +55,13 @@ public class JardinEnvironment extends Environment {
 
     private PercepcionCasillero getPercepcionArriba(Posicion posicionRepollo, Casillero[][] jardin) {
         PercepcionCasillero percepcion = null;
-        Posicion posicionAChequear = new Posicion(posicionRepollo.fila + 1, posicionRepollo.columna);
+        Posicion posicionAChequear = new Posicion(posicionRepollo.fila - 1, posicionRepollo.columna);
         while (percepcion == null && JardinEnvironmentState.posicionValida(posicionAChequear)) {
             Casillero casilleroAChequear = jardin[posicionAChequear.fila][posicionAChequear.columna];
             if (casilleroAChequear.tengoContenido()) {
-                percepcion = new PercepcionCasillero(casilleroAChequear, posicionAChequear);
+                percepcion = new PercepcionCasillero(new Casillero(casilleroAChequear), posicionAChequear);
             } else {
-                posicionAChequear.fila++; 
+                posicionAChequear.fila--; 
             }
         }
         return percepcion;
@@ -69,13 +69,13 @@ public class JardinEnvironment extends Environment {
 
     private PercepcionCasillero getPercepcionAbajo(Posicion posicionRepollo, Casillero[][] jardin) {
         PercepcionCasillero percepcion = null;
-        Posicion posicionAChequear = new Posicion(posicionRepollo.fila - 1, posicionRepollo.columna);
+        Posicion posicionAChequear = new Posicion(posicionRepollo.fila + 1, posicionRepollo.columna);
         while (percepcion == null && JardinEnvironmentState.posicionValida(posicionAChequear)) {
             Casillero casilleroAChequear = jardin[posicionAChequear.fila][posicionAChequear.columna];
             if (casilleroAChequear.tengoContenido()) {
-                percepcion = new PercepcionCasillero(casilleroAChequear, posicionAChequear);
+                percepcion = new PercepcionCasillero(new Casillero(casilleroAChequear), posicionAChequear);
             } else {
-                posicionAChequear.fila--; 
+                posicionAChequear.fila++; 
             }
         }
         return percepcion;
@@ -87,7 +87,7 @@ public class JardinEnvironment extends Environment {
         while (percepcion == null && JardinEnvironmentState.posicionValida(posicionAChequear)) {
             Casillero casilleroAChequear = jardin[posicionAChequear.fila][posicionAChequear.columna];
             if (casilleroAChequear.tengoContenido()) {
-                percepcion = new PercepcionCasillero(casilleroAChequear, posicionAChequear);
+                percepcion = new PercepcionCasillero(new Casillero(casilleroAChequear), posicionAChequear);
             } else {
                 posicionAChequear.columna--; 
             }
@@ -101,7 +101,7 @@ public class JardinEnvironment extends Environment {
         while (percepcion == null && JardinEnvironmentState.posicionValida(posicionAChequear)) {
             Casillero casilleroAChequear = jardin[posicionAChequear.fila][posicionAChequear.columna];
             if (casilleroAChequear.tengoContenido()) {
-                percepcion = new PercepcionCasillero(casilleroAChequear, posicionAChequear);
+                percepcion = new PercepcionCasillero(new Casillero(casilleroAChequear), posicionAChequear);
             } else {
                 posicionAChequear.columna++; 
             }
@@ -110,7 +110,7 @@ public class JardinEnvironment extends Environment {
     }
 
     private PercepcionCasillero getPercepcionCentro(Posicion posicionRepollo, Casillero[][] jardin) {
-        PercepcionCasillero percepcion = new PercepcionCasillero(jardin[posicionRepollo.fila][posicionRepollo.columna], posicionRepollo);
+        PercepcionCasillero percepcion = new PercepcionCasillero(new Casillero(jardin[posicionRepollo.fila][posicionRepollo.columna]), posicionRepollo);
         return percepcion;
     }
 

@@ -137,21 +137,116 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     @Override
     public void updateState(Perception p) {
         RepolloBoxeadorPerception percepcion = (RepolloBoxeadorPerception) p;
-        this.consumirPercepcion(percepcion.getPercepcionArriba());
-        this.consumirPercepcion(percepcion.getPercepcionAbajo());
+        this.consumirPercepcionArriba(percepcion.getPercepcionArriba());
+        this.consumirPercepcionAbajo(percepcion.getPercepcionAbajo());
+        this.consumirPercepcionIzquierda(percepcion.getPercepcionIzquierda());
+        this.consumirPercepcionDerecha(percepcion.getPercepcionDerecha());
         this.consumirPercepcion(percepcion.getPercepcionCentro());
-        this.consumirPercepcion(percepcion.getPercepcionIzquierda());
-        this.consumirPercepcion(percepcion.getPercepcionDerecha());
         this.energia = percepcion.getEnergiaAgente();
         this.zombiesEnElAmbiente = this.getCantidadZombiesPercibidos();
         // this.girasolesPlantados = this.getCantidadGirasolesPercibidos();
         reiniciarFilasVisitadas();
     }
 
-    private void consumirPercepcion(PercepcionCasillero percepcion) {
+    private void consumirPercepcionArriba(PercepcionCasillero percepcion) {
+        Posicion posicionAActualizar = new Posicion(posicion.fila - 1, posicion.columna);
         if (percepcion != null) {
-            this.jardin[percepcion.posicion.fila][percepcion.posicion.columna] = percepcion.casillero;
+            while (!percepcion.posicion.equals(posicionAActualizar)) {
+                this.limpiarCasillerosArriba(posicionAActualizar);
+            }
+            this.consumirPercepcion(percepcion);
+            posicionAActualizar.fila--;
+            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
+                this.limpiarCasillerosArriba(posicionAActualizar);
+            }
+        } else {
+            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
+                this.limpiarCasillerosArriba(posicionAActualizar);
+            }
         }
+    }
+
+    private void limpiarCasillerosArriba(Posicion posicionAActualizar) {
+        this.limpiarCasillero(posicionAActualizar);
+        posicionAActualizar.fila--;
+    }
+
+    private void consumirPercepcionAbajo(PercepcionCasillero percepcion) {
+        Posicion posicionAActualizar = new Posicion(posicion.fila + 1, posicion.columna);
+        if (percepcion != null) {
+            while (!percepcion.posicion.equals(posicionAActualizar)) {
+                limpiarCasillerosAbajo(posicionAActualizar);
+            }
+            this.consumirPercepcion(percepcion);
+            posicionAActualizar.fila++;
+            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
+                limpiarCasillerosAbajo(posicionAActualizar);
+            }
+        } else {
+            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
+                limpiarCasillerosAbajo(posicionAActualizar);
+            }
+        }
+    }
+
+    private void limpiarCasillerosAbajo(Posicion posicionAActualizar) {
+        this.limpiarCasillero(posicionAActualizar);
+        posicionAActualizar.fila++;
+    }
+
+    private void consumirPercepcionIzquierda(PercepcionCasillero percepcion) {
+        Posicion posicionAActualizar = new Posicion(posicion.fila, posicion.columna - 1);
+        if (percepcion != null) {
+            while (!percepcion.posicion.equals(posicionAActualizar)) {
+                this.limpiarCasillerosIzquierda(posicionAActualizar);
+            }
+            this.consumirPercepcion(percepcion);
+            posicionAActualizar.columna--;
+            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
+                this.limpiarCasillerosIzquierda(posicionAActualizar);
+            }
+        } else {
+            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
+                this.limpiarCasillerosIzquierda(posicionAActualizar);
+            }
+        }
+    }
+
+    private void limpiarCasillerosIzquierda(Posicion posicionAActualizar) {
+        this.limpiarCasillero(posicionAActualizar);
+        posicionAActualizar.columna--;
+    }
+
+    private void consumirPercepcionDerecha(PercepcionCasillero percepcion) {
+        Posicion posicionAActualizar = new Posicion(posicion.fila, posicion.columna + 1);
+        if (percepcion != null) {
+            while (!percepcion.posicion.equals(posicionAActualizar)) {
+                this.limpiarCasillerosDerecha(posicionAActualizar);
+            }
+            this.consumirPercepcion(percepcion);
+            posicionAActualizar.columna++;
+            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
+                this.limpiarCasillerosDerecha(posicionAActualizar);
+            }
+        } else {
+            while (JardinEnvironmentState.posicionValida(posicionAActualizar)) {
+                this.limpiarCasillerosDerecha(posicionAActualizar);
+            }
+        }
+    }
+
+    private void limpiarCasillerosDerecha(Posicion posicionAActualizar) {
+        this.limpiarCasillero(posicionAActualizar);
+        posicionAActualizar.columna++;
+    }
+
+    private void limpiarCasillero(Posicion posicionAActualizar) {
+        //TODO VER PROBLEMA CON SOLES
+        this.jardin[posicionAActualizar.fila][posicionAActualizar.columna] = new Casillero();
+    }
+
+    private void consumirPercepcion(PercepcionCasillero percepcion) {
+        this.jardin[percepcion.posicion.fila][percepcion.posicion.columna] = percepcion.casillero;
     }
 
     private Integer getCantidadZombiesPercibidos() {

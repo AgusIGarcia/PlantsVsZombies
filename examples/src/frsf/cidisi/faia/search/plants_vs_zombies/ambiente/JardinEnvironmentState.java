@@ -56,7 +56,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     private Boolean insertarZombie() {
-        if (this.ultimaColumna.puedoInsertarZombie()) {
+        if (this.ultimaColumna.puedoInsertarZombie() && RandomPropio.generarNumeroRandom(1, 3) == 2) {
             Integer filaAInsertarZombie = this.ultimaColumna.insertarZombie();
             this.jardin[filaAInsertarZombie][ULTIMA_COLUMNA].zombie = new Zombie();
             return true;
@@ -84,6 +84,9 @@ public class JardinEnvironmentState extends EnvironmentState {
         result += "Energía repollo: " + this.energiaRepollo + "\n";
         result += "Zombies por generar: " + this.cantidadZombiesAGenerar + "\n";
         result += "Zombies en ambiente: " + this.zombiesEnJuego + "\n";
+        result += "Posiciones Disponibles: " + "\n";
+        result += this.ultimaColumna.toString();
+        result += "\n";
         return result;
     }
 
@@ -134,6 +137,9 @@ public class JardinEnvironmentState extends EnvironmentState {
         if (posicionActual.columna == PRIMERA_COLUMNA) {
             this.zombieLlego = true;
         } else {
+            if (posicionActual.columna == ULTIMA_COLUMNA) {
+                this.ultimaColumna.posicionLiberada(posicionActual.fila);
+            }
             Posicion nuevaPosicion = new Posicion(posicionActual.fila, posicionActual.columna - 1);
             this.jardin[nuevaPosicion.fila][nuevaPosicion.columna].zombie = zombie;
             this.jardin[nuevaPosicion.fila][nuevaPosicion.columna].girasol = null;
@@ -232,6 +238,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     public void matarZombie(Posicion posicionAAtacar) {
         Casillero casilleroAAtacar = this.jardin[posicionAAtacar.fila][posicionAAtacar.columna];
         this.energiaRepollo -= casilleroAAtacar.zombie.vida;
+        casilleroAAtacar.zombie = null;
         this.zombiesEnJuego--;
     }
 

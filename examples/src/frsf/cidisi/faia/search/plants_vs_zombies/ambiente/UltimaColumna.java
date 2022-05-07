@@ -9,37 +9,50 @@ public class UltimaColumna {
 
     private List<Boolean> posicionesOcupadas;
     private Integer cantidadFilas;
-    private List<Integer> posicionesDisponibles;
 
     public UltimaColumna(Integer cantidadFilas) {
         this.cantidadFilas = cantidadFilas;
         this.posicionesOcupadas = new ArrayList<Boolean>();
-        this.posicionesDisponibles = new ArrayList<Integer>();
         this.inicializarListas();
     }
 
-    private void inicializarListas(){
-        for(Integer i = 0 ; i < this.cantidadFilas ; i++){
+    private void inicializarListas() {
+        for (Integer i = 0; i < this.cantidadFilas; i++) {
             this.posicionesOcupadas.add(false);
-            this.posicionesDisponibles.add(i);
         }
     }
 
-    public Boolean puedoInsertarZombie(){
+    public Boolean puedoInsertarZombie() {
         return posicionesOcupadas.contains(false);
     }
 
-    public Integer insertarZombie(){
-        Integer posicionAOcupar = RandomPropio.generarNumeroRandom(0, this.posicionesDisponibles.size() - 1);
-        Integer posicionFinalZombie = this.posicionesDisponibles.get(posicionAOcupar);
-        this.posicionesOcupadas.set(posicionFinalZombie,true);
-        this.posicionesDisponibles.remove(posicionAOcupar);
-        return posicionFinalZombie;
+    public Integer insertarZombie() {
+        List<Integer> listaPosicionesDisponibles = new ArrayList<>();
+        for (Integer i = 0; i < this.cantidadFilas; i++) {
+            if (!this.posicionesOcupadas.get(i)) {
+                listaPosicionesDisponibles.add(i);
+            }
+        }
+        Integer posicionAleatoria = RandomPropio.generarNumeroRandom(0, listaPosicionesDisponibles.size() - 1);
+        Integer posicionFinal = listaPosicionesDisponibles.get(posicionAleatoria);
+        this.posicionesOcupadas.set(posicionFinal, true);
+        return posicionFinal;
     }
 
-    public void posicionLiberada(Integer fila){
-        this.posicionesOcupadas.set(fila,false);
-        this.posicionesDisponibles.add(fila);
+    public void posicionLiberada(Integer fila) {
+        this.posicionesOcupadas.set(fila, false);
     }
 
+    @Override
+    public String toString() {
+        String result = "";
+        for (int fila = 0; fila < cantidadFilas; fila++) {
+            if (this.posicionesOcupadas.get(fila)) {
+                result += "F ";
+            } else {
+                result += "T ";
+            }
+        }
+        return result;
+    }
 }

@@ -34,7 +34,7 @@ public class RepolloBoxeadorAgent extends SearchBasedAgent {
 
         Vector<SearchAction> operators = new Vector<SearchAction>();
 
-        operators.add(new PlantarGirasol());
+        //operators.add(new PlantarGirasol());
         operators.add(new MatarZombieArriba());
         operators.add(new MatarZombieAbajo());
         operators.add(new MatarZombieDerecha());
