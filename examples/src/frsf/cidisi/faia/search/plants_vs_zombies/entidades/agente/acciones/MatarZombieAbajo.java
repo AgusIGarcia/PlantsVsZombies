@@ -20,6 +20,7 @@ public class MatarZombieAbajo extends SearchAction {
 
         if(JardinEnvironmentState.posicionValida(posicionAAtacar) && repolloState.puedoMatarZombie(posicionAAtacar)){
             repolloState.matarZombie(posicionAAtacar);
+            repolloState.sumarTurno();
             return repolloState;
         }
         
@@ -40,6 +41,7 @@ public class MatarZombieAbajo extends SearchAction {
         if(JardinEnvironmentState.posicionValida(posicionAAtacar) && jardinState.repolloPuedeMatarZombie(posicionAAtacar)){
             jardinState.matarZombie(posicionAAtacar);
             repolloState.matarZombie(posicionAAtacar);
+            repolloState.sumarTurno();
             return jardinState;
         }
 

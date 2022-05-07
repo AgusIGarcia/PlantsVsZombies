@@ -17,6 +17,8 @@ public class PlantarGirasol extends SearchAction {
 
         if(repolloState.sePuedePlantarGirasol()){
             repolloState.plantarGirasol();
+            repolloState.setPlanteGirasol(true);
+            repolloState.sumarTurno();
             return repolloState;
         }
         
@@ -33,6 +35,8 @@ public class PlantarGirasol extends SearchAction {
 
         if(jardinState.sePuedePlantarGirasol()){
             repolloState.plantarGirasol();
+            repolloState.setPlanteGirasol(true);
+            repolloState.sumarTurno();
             jardinState.plantarGirasol();
             return jardinState;
         }

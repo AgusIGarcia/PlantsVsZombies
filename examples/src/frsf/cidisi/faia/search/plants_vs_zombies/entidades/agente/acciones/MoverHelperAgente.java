@@ -40,5 +40,6 @@ public class MoverHelperAgente {
         this.repolloState.recolectarSoles();
         this.repolloState.perderEnergiaPorZombie();
         this.repolloState.actualizarFilasVisitadas();
+        this.repolloState.sumarTurno();
     }
 }
