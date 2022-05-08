@@ -6,6 +6,8 @@ import frsf.cidisi.faia.agent.GoalBasedAgent;
 import frsf.cidisi.faia.agent.Perception;
 import frsf.cidisi.faia.environment.Environment;
 import frsf.cidisi.faia.search.plants_vs_zombies.ambiente.JardinEnvironment;
+import frsf.cidisi.faia.search.plants_vs_zombies.ambiente.JardinEnvironmentState;
+import frsf.cidisi.faia.search.plants_vs_zombies.auxiliares.EscribirJSON;
 import frsf.cidisi.faia.simulator.SearchBasedAgentSimulator;
 import frsf.cidisi.faia.simulator.events.EventType;
 import frsf.cidisi.faia.simulator.events.SimulatorEventNotifier;
@@ -27,6 +29,7 @@ public class PvZSearchBasedAgentSimulator extends SearchBasedAgentSimulator {
         Perception perception;
         Action action;
         GoalBasedAgent agent;
+        EscribirJSON escritor = new EscribirJSON();
 
         agent = (GoalBasedAgent) this.getAgents().firstElement();
 
@@ -49,12 +52,18 @@ public class PvZSearchBasedAgentSimulator extends SearchBasedAgentSimulator {
             System.out.println("Agent State: " + agent.getAgentState());
             System.out.println("Environment: " + environment.toString());
 
+            escritor.escribirEstado((JardinEnvironmentState) environment.getEnvironmentState());
+
             System.out.println("Asking the agent for an action...");
             action = agent.selectAction();
 
             if (action == null) {
+                escritor.escribirAccion(action);
+                escritor.escribirTermino(false);
                 break;
             }
+
+            escritor.escribirAccion(action);
 
             System.out.println("Action returned: " + action);
             System.out.println();
@@ -62,6 +71,14 @@ public class PvZSearchBasedAgentSimulator extends SearchBasedAgentSimulator {
             this.actionReturned(agent, action);
             System.out.println(
                     "------------------------------------------------------------------------------------------------------------");
+
+            if(this.agentSucceeded(action)){
+                escritor.escribirTermino(true);
+            } else if(this.agentFailed(action)){
+                escritor.escribirTermino(false);
+            } else {
+                escritor.escribirTermino();
+            }
 
         } while (!this.agentSucceeded(action) && !this.agentFailed(action));
 
@@ -74,6 +91,8 @@ public class PvZSearchBasedAgentSimulator extends SearchBasedAgentSimulator {
 
         // Leave a blank line
         System.out.println();
+
+        escritor.finalizar();
 
         // FIXME: This call can be moved to the Simulator class
         this.environment.close();

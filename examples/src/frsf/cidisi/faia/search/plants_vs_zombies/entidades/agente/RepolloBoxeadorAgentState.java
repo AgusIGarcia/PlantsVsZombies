@@ -71,7 +71,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.turno = estado.getTurno();
         this.deboMatarZombie = estado.getDeboMatarZombie();
         this.copiarFilasVisitadas(estado.getFilasVisitadas());
-        // this.girasolesPlantados = estado.girasolesPlantados;
     }
 
     private void copiarJardin(Casillero[][] jardinACopiar) {
@@ -276,7 +275,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
 
     private void reiniciarFilasVisitadas() {
         if (this.todasLasFilasVisitadas()) {
-            // if (this.primerYUltimaFilaVisitada()) {
             this.inicializarFilasVisitadas();
         }
     }
@@ -312,7 +310,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         result += "\nTurno: " + this.turno + "\n";
         result += "Plante girasol: " + this.planteGirasol.toString() + "\n";
         result += "\n";
-        // result += "Girasoles plantados: " + this.girasolesPlantados + "\n";
         return result;
     }
 

@@ -26,7 +26,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     private Casillero[][] jardin;
     private Posicion posicionRepollo;
     private Integer energiaRepollo;
-    private Integer cantidadZombiesAGenerar;
+    private Integer cantidadZombiesPorGenerar;
     private Integer zombiesEnJuego;
     private Boolean zombieLlego;
     private Integer turno;
@@ -42,7 +42,7 @@ public class JardinEnvironmentState extends EnvironmentState {
         this.inicializarJardin();
         this.posicionRepollo = this.parametrosInicio.posicionRepollo;
         this.energiaRepollo = this.parametrosInicio.energiaRepollo;
-        this.cantidadZombiesAGenerar = this.parametrosInicio.cantidadZombiesAGenerar;
+        this.cantidadZombiesPorGenerar = this.parametrosInicio.cantidadZombiesAGenerar;
         this.zombiesEnJuego = 0;
         this.turno = 0;
         this.zombieLlego = false;
@@ -84,7 +84,7 @@ public class JardinEnvironmentState extends EnvironmentState {
         result += "------------------------------------------------------------------------------------------------------------------";
         result += "\n";
         result += "Energía repollo: " + this.energiaRepollo + "\n";
-        result += "Zombies por generar: " + this.cantidadZombiesAGenerar + "\n";
+        result += "Zombies por generar: " + this.cantidadZombiesPorGenerar + "\n";
         result += "Zombies en ambiente: " + this.zombiesEnJuego + "\n";
         result += "Posiciones Disponibles: " + "\n";
         result += this.ultimaColumna.toString();
@@ -163,7 +163,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     private void ubicarZombie() {
-        if (this.cantidadZombiesAGenerar > 0) {
+        if (this.cantidadZombiesPorGenerar > 0) {
             determinarSiSeUbicaZombie();
         }
     }
@@ -177,7 +177,7 @@ public class JardinEnvironmentState extends EnvironmentState {
 
     private void probarInsertarZombie() {
         if (this.insertarZombie()) {
-            this.cantidadZombiesAGenerar--;
+            this.cantidadZombiesPorGenerar--;
             this.zombiesEnJuego++;
         }
     }
@@ -250,6 +250,14 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     public Integer getCantidadZombiesRestantes() {
-        return this.zombiesEnJuego + this.cantidadZombiesAGenerar;
+        return this.zombiesEnJuego + this.cantidadZombiesPorGenerar;
+    }
+
+    public Integer getTurno(){
+        return this.turno;
+    }
+
+    public Integer getCantidadZombiesPorGenerar(){
+        return this.cantidadZombiesPorGenerar;
     }
 }
