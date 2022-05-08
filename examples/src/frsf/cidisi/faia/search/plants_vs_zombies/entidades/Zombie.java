@@ -4,8 +4,8 @@ import frsf.cidisi.faia.search.plants_vs_zombies.auxiliares.RandomPropio;
 
 public class Zombie {
 
-    private static final Integer CICLOS_MINIMOS_PARA_AVANZAR = 1;
-    private static final Integer CICLOS_MAXIMOS_PARA_AVANZAR = 3;
+    private static final Integer CICLOS_MINIMOS_PARA_AVANZAR = 2;
+    private static final Integer CICLOS_MAXIMOS_PARA_AVANZAR = 4;
 
     public TipoZombie tipo;
     public Integer vida;

@@ -15,9 +15,8 @@ public class MoverHelperAmbiente {
 
     public JardinEnvironmentState execute() {
 
-        preMovimiento();
-
         if (JardinEnvironmentState.posicionValida(posicionDestino) && this.jardinState.getEnergiaRepollo() > 0) {
+            preMovimiento();
             actualizarPosicionAgente();
             postMovimiento();
             return this.jardinState;

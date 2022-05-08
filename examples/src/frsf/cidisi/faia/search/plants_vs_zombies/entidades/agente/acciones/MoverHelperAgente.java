@@ -16,9 +16,8 @@ public class MoverHelperAgente {
 
     public RepolloBoxeadorAgentState execute(){
 
-        preMovimiento();
-        
         if (JardinEnvironmentState.posicionValida(posicionDestino) && this.repolloState.getEnergia() > 0) {
+            preMovimiento();
             actualizarPosicionAgente();
             postMovimiento();
             return this.repolloState;

@@ -16,9 +16,8 @@ public class MatarZombieIzquierda extends SearchAction {
 
         Posicion posicionAAtacar = calcularPosicionAAtacar(repolloState.getPosicion());
 
-        repolloState.recolectarSoles();
-
         if(JardinEnvironmentState.posicionValida(posicionAAtacar) && repolloState.puedoMatarZombie(posicionAAtacar)){
+            repolloState.recolectarSoles();
             repolloState.matarZombie(posicionAAtacar);
             repolloState.sumarTurno();
             return repolloState;
@@ -35,10 +34,9 @@ public class MatarZombieIzquierda extends SearchAction {
 
         Posicion posicionAAtacar = calcularPosicionAAtacar(jardinState.getPosicionRepollo());
 
-        jardinState.repolloRecolectaSoles();
-        repolloState.recolectarSoles();
-
         if(JardinEnvironmentState.posicionValida(posicionAAtacar) && jardinState.repolloPuedeMatarZombie(posicionAAtacar)){
+            jardinState.repolloRecolectaSoles();
+            repolloState.recolectarSoles();
             jardinState.matarZombie(posicionAAtacar);
             repolloState.matarZombie(posicionAAtacar);
             repolloState.sumarTurno();

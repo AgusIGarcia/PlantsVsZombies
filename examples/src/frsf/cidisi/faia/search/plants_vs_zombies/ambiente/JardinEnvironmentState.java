@@ -29,6 +29,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     private Integer cantidadZombiesAGenerar;
     private Integer zombiesEnJuego;
     private Boolean zombieLlego;
+    private Integer turno;
 
     public JardinEnvironmentState(InicioJuego parametrosInicio) {
         this.parametrosInicio = parametrosInicio;
@@ -43,6 +44,7 @@ public class JardinEnvironmentState extends EnvironmentState {
         this.energiaRepollo = this.parametrosInicio.energiaRepollo;
         this.cantidadZombiesAGenerar = this.parametrosInicio.cantidadZombiesAGenerar;
         this.zombiesEnJuego = 0;
+        this.turno = 0;
         this.zombieLlego = false;
     }
 
@@ -56,7 +58,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     private Boolean insertarZombie() {
-        if (this.ultimaColumna.puedoInsertarZombie() && RandomPropio.generarNumeroRandom(1, 3) == 2) {
+        if (this.turno > 5 && this.ultimaColumna.puedoInsertarZombie() && RandomPropio.generarNumeroRandom(1, 5) > 3) {
             Integer filaAInsertarZombie = this.ultimaColumna.insertarZombie();
             this.jardin[filaAInsertarZombie][ULTIMA_COLUMNA].zombie = new Zombie();
             return true;
@@ -108,6 +110,7 @@ public class JardinEnvironmentState extends EnvironmentState {
             }
         }
         this.ubicarZombie();
+        this.turno++;
     }
 
     private void generarSoles(Posicion posicionActual) {

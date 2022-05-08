@@ -13,15 +13,14 @@ public class PlantarGirasol extends SearchAction {
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) s;
 
-        repolloState.recolectarSoles();
-
-        if(repolloState.sePuedePlantarGirasol()){
+        if (repolloState.sePuedePlantarGirasol()) {
+            repolloState.recolectarSoles();
             repolloState.plantarGirasol();
             repolloState.setPlanteGirasol(true);
             repolloState.sumarTurno();
             return repolloState;
         }
-        
+
         return null;
     }
 
@@ -30,10 +29,9 @@ public class PlantarGirasol extends SearchAction {
         JardinEnvironmentState jardinState = (JardinEnvironmentState) est;
         RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) ast;
 
-        jardinState.repolloRecolectaSoles();
-        repolloState.recolectarSoles();
-
-        if(jardinState.sePuedePlantarGirasol()){
+        if (jardinState.sePuedePlantarGirasol()) {
+            jardinState.repolloRecolectaSoles();
+            repolloState.recolectarSoles();
             repolloState.plantarGirasol();
             repolloState.setPlanteGirasol(true);
             repolloState.sumarTurno();
