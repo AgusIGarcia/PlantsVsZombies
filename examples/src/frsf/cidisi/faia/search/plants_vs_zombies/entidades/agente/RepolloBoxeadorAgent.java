@@ -66,11 +66,11 @@ public class RepolloBoxeadorAgent extends SearchBasedAgent {
         // DepthFirstSearch strategy = new DepthFirstSearch();
         // BreathFirstSearch strategy = new BreathFirstSearch();
 
-        // IStepCostFunction costFunction = new AgentCostFunction();
-        // UniformCostSearch strategy = new UniformCostSearch(costFunction);
+        IStepCostFunction costFunction = new AgentCostFunction();
+        UniformCostSearch strategy = new UniformCostSearch(costFunction);
 
-        IEstimatedCostFunction heuristic = new AgentHeuristic();
-        GreedySearch strategy = new GreedySearch(heuristic);
+        // IEstimatedCostFunction heuristic = new AgentHeuristic();
+        // GreedySearch strategy = new GreedySearch(heuristic);
 
         // IStepCostFunction cost = new AgentCostFunction();
         // IEstimatedCostFunction heuristic = new AgentHeuristic();

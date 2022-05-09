@@ -478,25 +478,25 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     // }
 
     // BUSQUEDA POR COSTO
-    // public Boolean objetivoCumplido() {
-    // Boolean objetivoVariable = false;
-    // if (this.deboMatarZombie && turno > 11) {
-    // objetivoVariable = this.zombiesEnElAmbiente == 0;
-    // } else if (turno < 11) {
-    // objetivoVariable = this.planteGirasol;
-    // } else {
-    // objetivoVariable = this.meMovi;
-    // }
-    // return this.energia > 0 && objetivoVariable;
-    // }
+    public Boolean objetivoCumplido() {
+        Boolean objetivoVariable = false;
+        if (this.deboMatarZombie && turno > 11) {
+            objetivoVariable = this.zombiesEnElAmbiente == 0;
+        } else if (turno < 11) {
+            objetivoVariable = this.planteGirasol;
+        } else {
+            objetivoVariable = this.meMovi;
+        }
+        return this.energia > 0 && objetivoVariable;
+    }
 
     // BUSQUEDA AVARA
-    public Boolean objetivoCumplido() {
-        Boolean heuristicaCero = (this.girasolesRestantesPrimerColumna() +
-                this.todasLasFilasVisitadasHeuristica()
-                + this.zombiesRestantesPorMatarHeuristica()) == 0;
-        return this.energia > 0 && heuristicaCero;
-    }
+    // public Boolean objetivoCumplido() {
+    // Boolean heuristicaCero = (this.girasolesRestantesPrimerColumna() +
+    // this.todasLasFilasVisitadasHeuristica()
+    // + this.zombiesRestantesPorMatarHeuristica()) == 0;
+    // return this.energia > 0 && heuristicaCero;
+    // }
 
     public Integer girasolesRestantesPrimerColumna() {
         Integer girasolesRestantes = 5;

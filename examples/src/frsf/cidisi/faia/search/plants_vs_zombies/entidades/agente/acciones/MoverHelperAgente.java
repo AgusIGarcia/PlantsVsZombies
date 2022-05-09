@@ -9,14 +9,17 @@ public class MoverHelperAgente {
     private Posicion posicionDestino;
     private RepolloBoxeadorAgentState repolloState;
     private Integer costoPorDefecto;
+    private Posicion posicionAnterior;
 
-    public MoverHelperAgente(Posicion posicionDestino, RepolloBoxeadorAgentState repolloState, Integer costoPorDefecto) {
+    public MoverHelperAgente(Posicion posicionDestino, RepolloBoxeadorAgentState repolloState,
+            Integer costoPorDefecto) {
         this.posicionDestino = posicionDestino;
         this.repolloState = repolloState;
         this.costoPorDefecto = costoPorDefecto;
+        this.posicionAnterior = repolloState.getPosicion();
     }
 
-    public RepolloBoxeadorAgentState execute(){
+    public RepolloBoxeadorAgentState execute() {
 
         if (JardinEnvironmentState.posicionValida(posicionDestino) && this.repolloState.getEnergia() > 0) {
             preMovimiento();
@@ -28,7 +31,7 @@ public class MoverHelperAgente {
         return null;
     }
 
-    public void preMovimiento(){
+    public void preMovimiento() {
         this.repolloState.recolectarSoles();
     }
 
@@ -36,10 +39,12 @@ public class MoverHelperAgente {
         this.repolloState.setPosicion(this.posicionDestino);
     }
 
-
     private void postMovimiento() {
-        if(this.repolloState.getDeboMatarZombie()){
-            this.costoPorDefecto = 100;
+        if (this.repolloState.getDeboMatarZombie()) {
+            if (this.posicionAnterior.columna < this.posicionDestino.columna)
+                this.costoPorDefecto = 150;
+            else
+                this.costoPorDefecto = 100;
         } else {
             this.costoPorDefecto = this.costoPorDefecto - this.repolloState.getSolesEnPosicion(posicionDestino);
         }
