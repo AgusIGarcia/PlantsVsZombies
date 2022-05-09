@@ -422,6 +422,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.energia -= casilleroAAtacar.zombie.vida;
         casilleroAAtacar.zombie = null;
         this.zombiesEnElAmbiente--;
+        this.mateZombie = true;
     }
 
     private Casillero getCasilleroActual() {

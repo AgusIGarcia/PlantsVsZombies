@@ -60,6 +60,7 @@ public class PvZSearchBasedAgentSimulator extends SearchBasedAgentSimulator {
 
             if (action == null) {
                 escritor.escribirAccion(action);
+                escritor.escribirTermino();
                 break;
             }
 
