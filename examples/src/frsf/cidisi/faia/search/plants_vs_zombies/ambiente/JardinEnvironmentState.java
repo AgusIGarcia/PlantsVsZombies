@@ -172,7 +172,7 @@ public class JardinEnvironmentState extends EnvironmentState {
 
     private void determinarSiSeUbicaZombie() {
         Integer probabilidadGenerarZombie = RandomPropio.generarNumeroRandom(1, 8);
-        if (this.turno > 5 && probabilidadGenerarZombie > 7) {
+        if (this.turno > 0 && probabilidadGenerarZombie > 7) {
             probarInsertarZombie();
         }
     }
@@ -254,7 +254,7 @@ public class JardinEnvironmentState extends EnvironmentState {
                 if (this.jardin[fila][ULTIMA_COLUMNA].zombie != null)
                     estaTodaLibre = false;
             }
-            if(estaTodaLibre){
+            if (estaTodaLibre) {
                 this.ultimaColumna = new UltimaColumna(FILAS_JARDIN);
             }
         }
