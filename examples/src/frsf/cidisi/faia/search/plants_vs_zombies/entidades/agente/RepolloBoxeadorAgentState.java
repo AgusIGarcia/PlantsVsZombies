@@ -25,6 +25,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     private Integer costo;
     private Integer energiaInicial;
     private Integer girasolesPrimeraColumnaIniciales;
+    private boolean mateZombie;
 
     public RepolloBoxeadorAgentState(InicioJuego parametrosInicio) {
         this.parametrosInicio = parametrosInicio;
@@ -43,6 +44,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.costo = 0;
         this.deboMatarZombie = false;
         this.meMovi = false;
+        this.setMateZombie(false);
         this.setGirasolesPrimeraColumnaIniciales(100);
         this.setEnergiaInicial(this.parametrosInicio.energiaRepollo);
         this.inicializarFilasVisitadas();
@@ -80,6 +82,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.deboMatarZombie = estado.getDeboMatarZombie();
         this.meMovi = estado.getMeMovi();
         this.costo = estado.getCosto();
+        this.mateZombie = estado.getMateZombie();
         this.energiaInicial = estado.getEnergiaInicial();
         this.girasolesPrimeraColumnaIniciales = estado.getGirasolesPrimeraColumnaIniciales();
         this.copiarFilasVisitadas(estado.getFilasVisitadas());
@@ -119,8 +122,13 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
                 && this.deboMatarZombieIguales(otroEstado.getDeboMatarZombie())
                 && this.costosIguales(otroEstado.getCosto())
                 && this.meMoviIguales(otroEstado.getMeMovi())
+                && this.mateZombieIguales(otroEstado.getMateZombie())
                 && this.jardinesIguales(otroEstado.getJardin());
 
+    }
+
+    private boolean mateZombieIguales(boolean otroMateZombie) {
+        return this.mateZombie == otroMateZombie;
     }
 
     private boolean posicionesIguales(Posicion otraPosicion) {
@@ -192,6 +200,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.deboMatarZombie = this.zombiesEnElAmbiente > 0;
         this.costo = 0;
         this.meMovi = false;
+        this.mateZombie = false;
         this.setGirasolesPrimeraColumnaIniciales(this.girasolesRestantesPrimerColumna());
     }
 
@@ -339,7 +348,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         result += "\n";
         result += "Heuristica: " + this.zombiesRestantesPorMatarHeuristica() + " - "
                 + this.todasLasFilasVisitadasHeuristica() + " - "
-                + tengoVidaSuficienteHeuristica() + " - "// this.meMoviHeuristica()
                 + this.girasolesRestantesPrimerColumna() + "\n";
         result += "\n";
         return result;
@@ -484,7 +492,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
 
     public Boolean objetivoCumplido() {
         Boolean heuristicaCero = (this.girasolesRestantesPrimerColumna() + this.todasLasFilasVisitadasHeuristica()
-                + this.tengoVidaSuficienteHeuristica()// this.meMoviHeuristica()
                 + this.zombiesRestantesPorMatarHeuristica()) == 0;
         return this.energia > 0 && heuristicaCero;
     }
@@ -502,7 +509,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     }
 
     public Integer todasLasFilasVisitadasHeuristica() {
-        if (this.girasolesPrimeraColumnaIniciales > 0 || tengoVidaSuficienteHeuristica() > 0 || this.deboMatarZombie) {
+        if (this.girasolesPrimeraColumnaIniciales > 0 || this.deboMatarZombie) {
             return 0;
         }
         Integer filasPorVisitar = 5;
@@ -514,8 +521,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     }
 
     public Integer zombiesRestantesPorMatarHeuristica() {
-        if (!this.deboMatarZombie || this.girasolesPrimeraColumnaIniciales > 0
-                || tengoVidaSuficienteHeuristica() > 0) {
+        if (this.girasolesPrimeraColumnaIniciales > 0) {
             return 0;
         } else {
             Posicion posicionZombie = this.getPosicionZombieMasCercanoALaCasa();
@@ -526,7 +532,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
                 return this.zombiesEnElAmbiente;
             } else {
                 return Math.abs(Math.abs(posicionZombie.columna - this.posicion.columna) * 2
-                        + Math.abs(posicionZombie.fila - this.posicion.fila)) * this.zombiesEnElAmbiente;
+                        + Math.abs(posicionZombie.fila - this.posicion.fila)) * (this.mateZombie ? 0 : 1);
             }
         }
     }
@@ -540,16 +546,6 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
             }
         }
         return null;
-    }
-
-    public Integer tengoVidaSuficienteHeuristica() {
-        if (this.girasolesPrimeraColumnaIniciales > 0) {
-            return 0;
-        }
-        if (this.vidaZombiesPercibidos - 1 > this.energiaInicial) {
-            return this.posicion.columna * 2;
-        }
-        return 0;
     }
 
     private Boolean todasLasFilasVisitadas() {
@@ -575,4 +571,13 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     public void setEnergiaInicial(Integer energiaInicial) {
         this.energiaInicial = energiaInicial;
     }
+
+    public boolean getMateZombie() {
+        return mateZombie;
+    }
+
+    public void setMateZombie(boolean mateZombie) {
+        this.mateZombie = mateZombie;
+    }
+
 }

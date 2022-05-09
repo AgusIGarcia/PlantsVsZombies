@@ -10,12 +10,13 @@ public class AgentHeuristic implements IEstimatedCostFunction {
         RepolloBoxeadorAgentState repolloState = (RepolloBoxeadorAgentState) node.getAgentState();
 
         // System.out.println(
-        //         (repolloState.zombiesRestantesPorMatarHeuristica() + repolloState.todasLasFilasVisitadasHeuristica()
-        //                 + repolloState.tengoVidaSuficienteHeuristica()// repolloState.meMoviHeuristica()
-        //                 + repolloState.girasolesRestantesPrimerColumna()));
+        // (repolloState.zombiesRestantesPorMatarHeuristica() +
+        // repolloState.todasLasFilasVisitadasHeuristica()
+        // + repolloState.tengoVidaSuficienteHeuristica()//
+        // repolloState.meMoviHeuristica()
+        // + repolloState.girasolesRestantesPrimerColumna()));
 
         return (repolloState.zombiesRestantesPorMatarHeuristica() + repolloState.todasLasFilasVisitadasHeuristica()
-                + repolloState.tengoVidaSuficienteHeuristica()// repolloState.meMoviHeuristica()
                 + repolloState.girasolesRestantesPrimerColumna());
     }
 }

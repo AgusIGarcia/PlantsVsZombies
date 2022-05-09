@@ -4,8 +4,8 @@ import frsf.cidisi.faia.search.plants_vs_zombies.auxiliares.RandomPropio;
 
 public class Girasol {
 
-    private static final Integer CANTIDAD_MINIMA_DE_SOLES_A_GENERAR = 0;
-    private static final Integer CANTIDAD_MAXIMA_DE_SOLES_A_GENERAR = 1;
+    private static final Integer CANTIDAD_MINIMA_DE_SOLES_A_GENERAR = 1;
+    private static final Integer CANTIDAD_MAXIMA_DE_SOLES_A_GENERAR = 3;
 
     private Integer solesGenerados;
 
