@@ -42,7 +42,7 @@ public class MoverArriba extends SearchAction {
 
     @Override
     public Double getCost() {
-        return 1000d;
+        return 0d;
     }
 
     @Override

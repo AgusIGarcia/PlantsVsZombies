@@ -42,7 +42,7 @@ public class MoverDerecha extends SearchAction {
 
     @Override
     public Double getCost() {
-        return 3000d;
+        return 0d;
     }
 
     @Override

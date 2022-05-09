@@ -23,6 +23,8 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     private Boolean meMovi;
     private Integer turno;
     private Integer costo;
+    private Integer energiaInicial;
+    private Integer girasolesPrimeraColumnaIniciales;
 
     public RepolloBoxeadorAgentState(InicioJuego parametrosInicio) {
         this.parametrosInicio = parametrosInicio;
@@ -41,6 +43,8 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.costo = 0;
         this.deboMatarZombie = false;
         this.meMovi = false;
+        this.setGirasolesPrimeraColumnaIniciales(100);
+        this.setEnergiaInicial(this.parametrosInicio.energiaRepollo);
         this.inicializarFilasVisitadas();
     }
 
@@ -76,6 +80,8 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.deboMatarZombie = estado.getDeboMatarZombie();
         this.meMovi = estado.getMeMovi();
         this.costo = estado.getCosto();
+        this.energiaInicial = estado.getEnergiaInicial();
+        this.girasolesPrimeraColumnaIniciales = estado.getGirasolesPrimeraColumnaIniciales();
         this.copiarFilasVisitadas(estado.getFilasVisitadas());
     }
 
@@ -179,12 +185,14 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.consumirPercepcionDerecha(percepcion.getPercepcionDerecha());
         this.consumirPercepcion(percepcion.getPercepcionCentro());
         this.energia = percepcion.getEnergiaAgente();
+        this.energiaInicial = percepcion.getEnergiaAgente();
         this.actualizarPercepcionesZombiesYSoles();
         this.planteGirasol = false;
         reiniciarFilasVisitadas();
         this.deboMatarZombie = this.zombiesEnElAmbiente > 0;
         this.costo = 0;
         this.meMovi = false;
+        this.setGirasolesPrimeraColumnaIniciales(this.girasolesRestantesPrimerColumna());
     }
 
     private void consumirPercepcionArriba(PercepcionCasillero percepcion) {
@@ -329,8 +337,9 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         result += "\nTurno: " + this.turno + "\n";
         result += "Plante girasol: " + this.planteGirasol.toString() + "\n";
         result += "\n";
-        result += "Heuristica: " + this.zombiesRestantesPorMatarHeuristica() + this.todasLasFilasVisitadasHeuristica()
-                + tengoVidaSuficienteHeuristica()// this.meMoviHeuristica()
+        result += "Heuristica: " + this.zombiesRestantesPorMatarHeuristica() + " - "
+                + this.todasLasFilasVisitadasHeuristica() + " - "
+                + tengoVidaSuficienteHeuristica() + " - "// this.meMoviHeuristica()
                 + this.girasolesRestantesPrimerColumna() + "\n";
         result += "\n";
         return result;
@@ -492,16 +501,8 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         return girasolesRestantes * 3;
     }
 
-    // public Integer meMoviHeuristica() {
-    // if (this.meMovi) {
-    // return 0;
-    // } else {
-    // return 100;
-    // }
-    // }
-
     public Integer todasLasFilasVisitadasHeuristica() {
-        if (this.deboMatarZombie || this.girasolesRestantesPrimerColumna() > 0 || tengoVidaSuficienteHeuristica() > 0) {
+        if (this.girasolesPrimeraColumnaIniciales > 0 || tengoVidaSuficienteHeuristica() > 0 || this.deboMatarZombie) {
             return 0;
         }
         Integer filasPorVisitar = 5;
@@ -513,15 +514,19 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     }
 
     public Integer zombiesRestantesPorMatarHeuristica() {
-        if (girasolesRestantesPrimerColumna() > 0 || tengoVidaSuficienteHeuristica() > 0 || this.deboMatarZombie) {
+        if (!this.deboMatarZombie || this.girasolesPrimeraColumnaIniciales > 0
+                || tengoVidaSuficienteHeuristica() > 0) {
             return 0;
         } else {
             Posicion posicionZombie = this.getPosicionZombieMasCercanoALaCasa();
+            if (posicionZombie == null) {
+                return 0;
+            }
             if (posicionZombie.equals(this.posicion)) {
                 return this.zombiesEnElAmbiente;
             } else {
-                return Math.abs((posicionZombie.columna - this.posicion.columna) * 2
-                        + (posicionZombie.fila - this.posicion.fila)) * this.zombiesEnElAmbiente;
+                return Math.abs(Math.abs(posicionZombie.columna - this.posicion.columna) * 2
+                        + Math.abs(posicionZombie.fila - this.posicion.fila)) * this.zombiesEnElAmbiente;
             }
         }
     }
@@ -529,7 +534,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     private Posicion getPosicionZombieMasCercanoALaCasa() {
         for (int columna = JardinEnvironmentState.PRIMERA_COLUMNA; columna <= JardinEnvironmentState.ULTIMA_COLUMNA; columna++) {
             for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
-                if (this.jardin[columna][fila].zombie != null) {
+                if (this.jardin[fila][columna].zombie != null) {
                     return new Posicion(fila, columna);
                 }
             }
@@ -538,7 +543,10 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     }
 
     public Integer tengoVidaSuficienteHeuristica() {
-        if (this.vidaZombiesPercibidos - 1 > this.energia || this.energia < 10) {
+        if (this.girasolesPrimeraColumnaIniciales > 0) {
+            return 0;
+        }
+        if (this.vidaZombiesPercibidos - 1 > this.energiaInicial) {
             return this.posicion.columna * 2;
         }
         return 0;
@@ -550,5 +558,21 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
                 return false;
         }
         return true;
+    }
+
+    public Integer getEnergiaInicial() {
+        return energiaInicial;
+    }
+
+    public Integer getGirasolesPrimeraColumnaIniciales() {
+        return girasolesPrimeraColumnaIniciales;
+    }
+
+    public void setGirasolesPrimeraColumnaIniciales(Integer girasolesPrimeraColumnaIniciales) {
+        this.girasolesPrimeraColumnaIniciales = girasolesPrimeraColumnaIniciales;
+    }
+
+    public void setEnergiaInicial(Integer energiaInicial) {
+        this.energiaInicial = energiaInicial;
     }
 }

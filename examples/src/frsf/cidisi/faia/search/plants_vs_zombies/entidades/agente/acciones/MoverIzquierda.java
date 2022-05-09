@@ -42,7 +42,7 @@ public class MoverIzquierda extends SearchAction {
 
     @Override
     public Double getCost() {
-        return 500d;
+        return 0d;
     }
 
     @Override
