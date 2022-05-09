@@ -21,6 +21,7 @@ public class MatarZombieDerecha extends SearchAction {
             repolloState.recolectarSoles();
             repolloState.matarZombie(posicionAAtacar);
             repolloState.sumarTurno();
+            repolloState.agregarCosto(10);
             return repolloState;
         }
         
@@ -41,6 +42,7 @@ public class MatarZombieDerecha extends SearchAction {
             jardinState.matarZombie(posicionAAtacar);
             repolloState.matarZombie(posicionAAtacar);
             repolloState.sumarTurno();
+            repolloState.agregarCosto(10);
             return jardinState;
         }
 

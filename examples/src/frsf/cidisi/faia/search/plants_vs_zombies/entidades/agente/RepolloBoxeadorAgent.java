@@ -21,7 +21,9 @@ import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.Mover
 import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.PlantarGirasol;
 import frsf.cidisi.faia.solver.search.BreathFirstSearch;
 import frsf.cidisi.faia.solver.search.DepthFirstSearch;
+import frsf.cidisi.faia.solver.search.IStepCostFunction;
 import frsf.cidisi.faia.solver.search.Search;
+import frsf.cidisi.faia.solver.search.UniformCostSearch;
 
 public class RepolloBoxeadorAgent extends SearchBasedAgent {
 
@@ -34,16 +36,16 @@ public class RepolloBoxeadorAgent extends SearchBasedAgent {
 
         Vector<SearchAction> operators = new Vector<SearchAction>();
 
-        operators.add(new MoverArriba());
-        operators.add(new MoverAbajo());
-        operators.add(new MoverDerecha());
-        operators.add(new MoverIzquierda());
-        
         operators.add(new MatarZombieArriba());
         operators.add(new MatarZombieAbajo());
         operators.add(new MatarZombieDerecha());
         operators.add(new MatarZombieIzquierda());
 
+        operators.add(new MoverArriba());
+        operators.add(new MoverAbajo());
+        operators.add(new MoverDerecha());
+        operators.add(new MoverIzquierda());
+        
         operators.add(new PlantarGirasol());
 
         Problem problem = new Problem(goal, repolloState, operators);
@@ -59,7 +61,12 @@ public class RepolloBoxeadorAgent extends SearchBasedAgent {
     public Action selectAction() {
         // Create the search strategy
         //DepthFirstSearch strategy = new DepthFirstSearch();
-        BreathFirstSearch strategy = new BreathFirstSearch();
+        //BreathFirstSearch strategy = new BreathFirstSearch();
+
+        
+        IStepCostFunction costFunction = new AgentCostFunction();
+        UniformCostSearch strategy = new UniformCostSearch(costFunction);
+
         /**
          * Another search strategy examples:
          * 

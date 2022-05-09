@@ -72,20 +72,19 @@ public class PvZSearchBasedAgentSimulator extends SearchBasedAgentSimulator {
             System.out.println(
                     "------------------------------------------------------------------------------------------------------------");
 
-            if(this.agentSucceeded(action)){
-                escritor.escribirTermino(true);
-            } else if(this.agentFailed(action)){
-                escritor.escribirTermino(false);
-            } else {
-                escritor.escribirTermino();
-            }
+            escritor.escribirTermino();
 
         } while (!this.agentSucceeded(action) && !this.agentFailed(action));
+        
+        escritor.escribirEstado((JardinEnvironmentState) environment.getEnvironmentState());
+        escritor.escribirAccion(action);
 
         // Check what happened, if agent has reached the goal or not.
         if (this.agentSucceeded(action)) {
+            escritor.escribirTermino(true);
             System.out.println("Agent has reached the goal!");
         } else {
+            escritor.escribirTermino(false);
             System.out.println("ERROR: The simulation has finished, but the agent has not reached his goal.");
         }
 

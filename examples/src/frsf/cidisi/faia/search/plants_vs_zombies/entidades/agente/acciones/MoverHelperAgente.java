@@ -36,9 +36,11 @@ public class MoverHelperAgente {
 
 
     private void postMovimiento() {
+        this.repolloState.agregarCosto(1000 - this.repolloState.getSolesEnPosicion(this.posicionDestino));
         this.repolloState.recolectarSoles();
         this.repolloState.perderEnergiaPorZombie();
         this.repolloState.actualizarFilasVisitadas();
         this.repolloState.sumarTurno();
+        
     }
 }

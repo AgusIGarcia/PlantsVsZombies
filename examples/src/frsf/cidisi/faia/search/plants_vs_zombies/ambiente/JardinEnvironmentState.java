@@ -21,7 +21,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     public static final Integer ULTIMA_COLUMNA = 8;
 
     private final InicioJuego parametrosInicio;
-    private final UltimaColumna ultimaColumna;
+    private UltimaColumna ultimaColumna;
 
     private Casillero[][] jardin;
     private Posicion posicionRepollo;
@@ -58,7 +58,7 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     private Boolean insertarZombie() {
-        if (this.turno > 5 && this.ultimaColumna.puedoInsertarZombie() && RandomPropio.generarNumeroRandom(1, 5) > 3) {
+        if (this.ultimaColumna.puedoInsertarZombie()) {
             Integer filaAInsertarZombie = this.ultimaColumna.insertarZombie();
             this.jardin[filaAInsertarZombie][ULTIMA_COLUMNA].zombie = new Zombie();
             return true;
@@ -111,6 +111,7 @@ public class JardinEnvironmentState extends EnvironmentState {
         }
         this.ubicarZombie();
         this.turno++;
+        this.hotFixUltimaColumna();
     }
 
     private void generarSoles(Posicion posicionActual) {
@@ -146,6 +147,7 @@ public class JardinEnvironmentState extends EnvironmentState {
             Posicion nuevaPosicion = new Posicion(posicionActual.fila, posicionActual.columna - 1);
             this.jardin[nuevaPosicion.fila][nuevaPosicion.columna].zombie = zombie;
             this.jardin[nuevaPosicion.fila][nuevaPosicion.columna].girasol = null;
+            this.jardin[nuevaPosicion.fila][nuevaPosicion.columna].cantidadDeSoles = 0;
             this.zombieAtacaAgenteSiPuede(zombie, nuevaPosicion);
         }
     }
@@ -169,8 +171,8 @@ public class JardinEnvironmentState extends EnvironmentState {
     }
 
     private void determinarSiSeUbicaZombie() {
-        Integer probabilidadGenerarZombie = RandomPropio.generarNumeroRandom(0, 1);
-        if (probabilidadGenerarZombie == 1) {
+        Integer probabilidadGenerarZombie = RandomPropio.generarNumeroRandom(1, 8);
+        if (this.turno > 5 && probabilidadGenerarZombie > 7) {
             probarInsertarZombie();
         }
     }
@@ -245,6 +247,19 @@ public class JardinEnvironmentState extends EnvironmentState {
         this.zombiesEnJuego--;
     }
 
+    private void hotFixUltimaColumna() {
+        if (!this.ultimaColumna.puedoInsertarZombie()) {
+            Boolean estaTodaLibre = true;
+            for (int fila = PRIMERA_FILA; fila <= ULTIMA_FILA; fila++) {
+                if (this.jardin[fila][ULTIMA_COLUMNA].zombie != null)
+                    estaTodaLibre = false;
+            }
+            if(estaTodaLibre){
+                this.ultimaColumna = new UltimaColumna(FILAS_JARDIN);
+            }
+        }
+    }
+
     private Casillero getCasilleroRepollo() {
         return this.jardin[this.posicionRepollo.fila][this.posicionRepollo.columna];
     }
@@ -253,11 +268,11 @@ public class JardinEnvironmentState extends EnvironmentState {
         return this.zombiesEnJuego + this.cantidadZombiesPorGenerar;
     }
 
-    public Integer getTurno(){
+    public Integer getTurno() {
         return this.turno;
     }
 
-    public Integer getCantidadZombiesPorGenerar(){
+    public Integer getCantidadZombiesPorGenerar() {
         return this.cantidadZombiesPorGenerar;
     }
 }
