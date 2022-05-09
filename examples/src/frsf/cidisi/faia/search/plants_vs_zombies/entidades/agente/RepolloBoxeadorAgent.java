@@ -19,8 +19,11 @@ import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.Mover
 import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.MoverDerecha;
 import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.MoverIzquierda;
 import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.acciones.PlantarGirasol;
+import frsf.cidisi.faia.solver.search.AStarSearch;
 import frsf.cidisi.faia.solver.search.BreathFirstSearch;
 import frsf.cidisi.faia.solver.search.DepthFirstSearch;
+import frsf.cidisi.faia.solver.search.GreedySearch;
+import frsf.cidisi.faia.solver.search.IEstimatedCostFunction;
 import frsf.cidisi.faia.solver.search.IStepCostFunction;
 import frsf.cidisi.faia.solver.search.Search;
 import frsf.cidisi.faia.solver.search.UniformCostSearch;
@@ -45,7 +48,7 @@ public class RepolloBoxeadorAgent extends SearchBasedAgent {
         operators.add(new MoverAbajo());
         operators.add(new MoverDerecha());
         operators.add(new MoverIzquierda());
-        
+
         operators.add(new PlantarGirasol());
 
         Problem problem = new Problem(goal, repolloState, operators);
@@ -60,12 +63,18 @@ public class RepolloBoxeadorAgent extends SearchBasedAgent {
     @Override
     public Action selectAction() {
         // Create the search strategy
-        //DepthFirstSearch strategy = new DepthFirstSearch();
-        //BreathFirstSearch strategy = new BreathFirstSearch();
+        // DepthFirstSearch strategy = new DepthFirstSearch();
+        // BreathFirstSearch strategy = new BreathFirstSearch();
 
-        
-        IStepCostFunction costFunction = new AgentCostFunction();
-        UniformCostSearch strategy = new UniformCostSearch(costFunction);
+        // IStepCostFunction costFunction = new AgentCostFunction();
+        // UniformCostSearch strategy = new UniformCostSearch(costFunction);
+
+        IEstimatedCostFunction heuristic = new AgentHeuristic();
+        GreedySearch strategy = new GreedySearch(heuristic);
+
+        // IStepCostFunction cost = new AgentCostFunction();
+        // IEstimatedCostFunction heuristic = new AgentHeuristic();
+        // AStarSearch strategy = new AStarSearch(cost, heuristic);
 
         /**
          * Another search strategy examples:

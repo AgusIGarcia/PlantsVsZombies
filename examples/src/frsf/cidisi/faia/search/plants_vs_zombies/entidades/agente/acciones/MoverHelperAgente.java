@@ -39,7 +39,9 @@ public class MoverHelperAgente {
 
     private void postMovimiento() {
         if(this.repolloState.getDeboMatarZombie()){
-            this.costoPorDefecto = 0;
+            this.costoPorDefecto = 100;
+        } else {
+            this.costoPorDefecto = this.costoPorDefecto - this.repolloState.getSolesEnPosicion(posicionDestino);
         }
         this.repolloState.agregarCosto(this.costoPorDefecto);
         this.repolloState.recolectarSoles();

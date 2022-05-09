@@ -329,6 +329,9 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         result += "\nTurno: " + this.turno + "\n";
         result += "Plante girasol: " + this.planteGirasol.toString() + "\n";
         result += "\n";
+        result += "Heuristica: " + this.zombiesRestantesPorMatarHeuristica() + this.todasLasFilasVisitadasHeuristica()// this.meMoviHeuristica()
+                + this.girasolesRestantesPrimerColumna() + "\n";
+        result += "\n";
         return result;
     }
 
@@ -439,8 +442,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         return this.jardin[posicionAExaminar.fila][posicionAExaminar.columna].cantidadDeSoles;
     }
 
-
-    //BUSQUEDA EN AMPLITUD
+    // BUSQUEDA EN AMPLITUD
 
     // public Boolean objetivoCumplido() {
     // Boolean objetivoVariable = false;
@@ -457,18 +459,59 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     // return this.energia > 0 && objetivoVariable;
     // }
 
+    // BUSQUEDA POR COSTO
+    // public Boolean objetivoCumplido() {
+    // Boolean objetivoVariable = false;
+    // if (this.deboMatarZombie && turno > 11) {
+    // objetivoVariable = this.zombiesEnElAmbiente == 0;
+    // } else if (turno < 11) {
+    // objetivoVariable = this.planteGirasol;
+    // } else {
+    // objetivoVariable = this.meMovi;
+    // }
+    // return this.energia > 0 && objetivoVariable;
+    // }
 
-    //BUSQUEDA POR COSTO
     public Boolean objetivoCumplido() {
-        Boolean objetivoVariable = false;
-        if (this.deboMatarZombie) {
-            objetivoVariable = this.zombiesEnElAmbiente == 0;
-        } else if (turno < 15){
-            objetivoVariable = this.planteGirasol;
-        } else {
-            objetivoVariable = this.meMovi;
+        Boolean heuristicaCero = (this.girasolesRestantesPrimerColumna() + this.todasLasFilasVisitadasHeuristica()// this.meMoviHeuristica()
+                + this.zombiesRestantesPorMatarHeuristica()) == 0;
+        return this.energia > 0 && heuristicaCero;
+    }
+
+    public Integer girasolesRestantesPrimerColumna() {
+        // if (this.deboMatarZombie) {
+        // return 0;
+        // }
+        Integer girasolesRestantes = 5;
+        for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
+            if (this.jardin[fila][JardinEnvironmentState.PRIMERA_COLUMNA].girasol != null)
+                girasolesRestantes--;
         }
-        return this.energia > 0 && objetivoVariable;
+        return girasolesRestantes * 100;
+    }
+
+    // public Integer meMoviHeuristica() {
+    // if (this.meMovi) {
+    // return 0;
+    // } else {
+    // return 100;
+    // }
+    // }
+
+    public Integer todasLasFilasVisitadasHeuristica() {
+        if (this.deboMatarZombie) {
+            return 0;
+        }
+        Integer filasPorVisitar = 5;
+        for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
+            if (this.filasVisitadas[fila])
+                filasPorVisitar--;
+        }
+        return filasPorVisitar * 100;
+    }
+
+    public Integer zombiesRestantesPorMatarHeuristica() {
+        return this.zombiesEnElAmbiente * 100;
     }
 
     private Boolean todasLasFilasVisitadas() {
