@@ -8,6 +8,7 @@ import frsf.cidisi.faia.environment.Environment;
 import frsf.cidisi.faia.search.plants_vs_zombies.ambiente.JardinEnvironment;
 import frsf.cidisi.faia.search.plants_vs_zombies.ambiente.JardinEnvironmentState;
 import frsf.cidisi.faia.search.plants_vs_zombies.auxiliares.EscribirJSON;
+import frsf.cidisi.faia.search.plants_vs_zombies.entidades.agente.RepolloBoxeadorAgentState;
 import frsf.cidisi.faia.simulator.SearchBasedAgentSimulator;
 import frsf.cidisi.faia.simulator.events.EventType;
 import frsf.cidisi.faia.simulator.events.SimulatorEventNotifier;
@@ -69,10 +70,12 @@ public class PvZSearchBasedAgentSimulator extends SearchBasedAgentSimulator {
             System.out.println();
 
             this.actionReturned(agent, action);
+            System.out.println("Costo : " + ((RepolloBoxeadorAgentState)agent.getAgentState()).getCosto());
             System.out.println(
                     "------------------------------------------------------------------------------------------------------------");
 
             escritor.escribirTermino();
+
 
         } while (!this.agentSucceeded(action) && !this.agentFailed(action));
         

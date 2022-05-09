@@ -8,10 +8,12 @@ public class MoverHelperAgente {
 
     private Posicion posicionDestino;
     private RepolloBoxeadorAgentState repolloState;
+    private Integer costoPorDefecto;
 
-    public MoverHelperAgente(Posicion posicionDestino, RepolloBoxeadorAgentState repolloState) {
+    public MoverHelperAgente(Posicion posicionDestino, RepolloBoxeadorAgentState repolloState, Integer costoPorDefecto) {
         this.posicionDestino = posicionDestino;
         this.repolloState = repolloState;
+        this.costoPorDefecto = costoPorDefecto;
     }
 
     public RepolloBoxeadorAgentState execute(){
@@ -36,11 +38,14 @@ public class MoverHelperAgente {
 
 
     private void postMovimiento() {
-        this.repolloState.agregarCosto(1000 - this.repolloState.getSolesEnPosicion(this.posicionDestino));
+        if(this.repolloState.getDeboMatarZombie()){
+            this.costoPorDefecto = 0;
+        }
+        this.repolloState.agregarCosto(this.costoPorDefecto);
         this.repolloState.recolectarSoles();
         this.repolloState.perderEnergiaPorZombie();
         this.repolloState.actualizarFilasVisitadas();
         this.repolloState.sumarTurno();
-        
+        this.repolloState.setMeMovi(true);
     }
 }

@@ -20,6 +20,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     private Boolean[] filasVisitadas;
     private Boolean planteGirasol;
     private Boolean deboMatarZombie;
+    private Boolean meMovi;
     private Integer turno;
     private Integer costo;
 
@@ -39,6 +40,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.turno = 0;
         this.costo = 0;
         this.deboMatarZombie = false;
+        this.meMovi = false;
         this.inicializarFilasVisitadas();
     }
 
@@ -72,6 +74,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.planteGirasol = estado.getPlanteGirasol();
         this.turno = estado.getTurno();
         this.deboMatarZombie = estado.getDeboMatarZombie();
+        this.meMovi = estado.getMeMovi();
         this.costo = estado.getCosto();
         this.copiarFilasVisitadas(estado.getFilasVisitadas());
     }
@@ -108,8 +111,10 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
                 && planteGirasolIgual(otroEstado.getPlanteGirasol())
                 && turnosIguales(otroEstado.getTurno())
                 && this.deboMatarZombieIguales(otroEstado.getDeboMatarZombie())
-                && this.jardinesIguales(otroEstado.getJardin())
-                && this.costosIguales(otroEstado.getCosto());
+                && this.costosIguales(otroEstado.getCosto())
+                && this.meMoviIguales(otroEstado.getMeMovi())
+                && this.jardinesIguales(otroEstado.getJardin());
+
     }
 
     private boolean posicionesIguales(Posicion otraPosicion) {
@@ -134,6 +139,10 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
 
     private boolean costosIguales(Integer otroCosto) {
         return this.costo == otroCosto;
+    }
+
+    private boolean meMoviIguales(Boolean otroMeMovi) {
+        return this.meMovi == otroMeMovi;
     }
 
     private boolean filasVisitadasIguales(Boolean[] otroFilasVisitadas) {
@@ -175,6 +184,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         reiniciarFilasVisitadas();
         this.deboMatarZombie = this.zombiesEnElAmbiente > 0;
         this.costo = 0;
+        this.meMovi = false;
     }
 
     private void consumirPercepcionArriba(PercepcionCasillero percepcion) {
@@ -405,8 +415,16 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         this.turno++;
     }
 
-    private Boolean getDeboMatarZombie() {
+    public Boolean getDeboMatarZombie() {
         return this.deboMatarZombie;
+    }
+
+    public Boolean getMeMovi() {
+        return this.meMovi;
+    }
+
+    public void setMeMovi(Boolean meMovi) {
+        this.meMovi = meMovi;
     }
 
     public Integer getCosto() {
@@ -414,23 +432,41 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     }
 
     public void agregarCosto(Integer costoAAgregar) {
-        this.costo += costo;
+        this.costo += costoAAgregar;
     }
 
-    public Integer getSolesEnPosicion(Posicion posicionAExaminar){
+    public Integer getSolesEnPosicion(Posicion posicionAExaminar) {
         return this.jardin[posicionAExaminar.fila][posicionAExaminar.columna].cantidadDeSoles;
     }
 
+
+    //BUSQUEDA EN AMPLITUD
+
+    // public Boolean objetivoCumplido() {
+    // Boolean objetivoVariable = false;
+    // if (this.energia > this.vidaZombiesPercibidos && this.energia > 10 &&
+    // this.turno > 5) {
+    // if (this.deboMatarZombie) {
+    // objetivoVariable = this.zombiesEnElAmbiente == 0;
+    // } else {
+    // objetivoVariable = this.todasLasFilasVisitadas();
+    // }
+    // } else {
+    // objetivoVariable = this.planteGirasol;
+    // }
+    // return this.energia > 0 && objetivoVariable;
+    // }
+
+
+    //BUSQUEDA POR COSTO
     public Boolean objetivoCumplido() {
         Boolean objetivoVariable = false;
-        if (this.energia > this.vidaZombiesPercibidos && this.energia > 10 && this.turno > 5) {
-            if (this.deboMatarZombie) {
-                objetivoVariable = this.zombiesEnElAmbiente == 0;
-            } else {
-                objetivoVariable = this.todasLasFilasVisitadas();
-            }
-        } else {
+        if (this.deboMatarZombie) {
+            objetivoVariable = this.zombiesEnElAmbiente == 0;
+        } else if (turno < 15){
             objetivoVariable = this.planteGirasol;
+        } else {
+            objetivoVariable = this.meMovi;
         }
         return this.energia > 0 && objetivoVariable;
     }

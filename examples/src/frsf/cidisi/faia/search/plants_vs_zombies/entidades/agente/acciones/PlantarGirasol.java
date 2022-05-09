@@ -17,6 +17,7 @@ public class PlantarGirasol extends SearchAction {
             repolloState.recolectarSoles();
             repolloState.plantarGirasol();
             repolloState.setPlanteGirasol(true);
+            repolloState.agregarCosto(0);
             repolloState.sumarTurno();
             return repolloState;
         }
@@ -35,7 +36,7 @@ public class PlantarGirasol extends SearchAction {
             repolloState.plantarGirasol();
             repolloState.setPlanteGirasol(true);
             repolloState.sumarTurno();
-            repolloState.agregarCosto(1);
+            repolloState.agregarCosto(0);
             jardinState.plantarGirasol();
             return jardinState;
         }

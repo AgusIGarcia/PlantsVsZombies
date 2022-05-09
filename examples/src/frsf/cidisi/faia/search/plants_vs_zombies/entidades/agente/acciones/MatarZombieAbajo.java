@@ -20,7 +20,7 @@ public class MatarZombieAbajo extends SearchAction {
             repolloState.recolectarSoles();
             repolloState.matarZombie(posicionAAtacar);
             repolloState.sumarTurno();
-            repolloState.agregarCosto(10);
+            repolloState.agregarCosto(0);
             return repolloState;
         }
         
@@ -41,7 +41,7 @@ public class MatarZombieAbajo extends SearchAction {
             jardinState.matarZombie(posicionAAtacar);
             repolloState.matarZombie(posicionAAtacar);
             repolloState.sumarTurno();
-            repolloState.agregarCosto(10);
+            repolloState.agregarCosto(0);
             return jardinState;
         }
 

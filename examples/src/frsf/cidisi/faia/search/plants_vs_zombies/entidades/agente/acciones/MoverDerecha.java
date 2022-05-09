@@ -16,7 +16,7 @@ public class MoverDerecha extends SearchAction {
 
         Posicion posicionDestino = calcularPosicionDestino(repolloState.getPosicion());
         
-        return new MoverHelperAgente(posicionDestino, repolloState).execute();
+        return new MoverHelperAgente(posicionDestino, repolloState, 30).execute();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class MoverDerecha extends SearchAction {
         JardinEnvironmentState moverHelperAmbiente = new MoverHelperAmbiente(posicionDestino, jardinState).execute();
 
         if (moverHelperAmbiente != null){
-            new MoverHelperAgente(posicionDestino, repolloState).execute();
+            new MoverHelperAgente(posicionDestino, repolloState, 30).execute();
         }
         
         return moverHelperAmbiente;
@@ -42,7 +42,7 @@ public class MoverDerecha extends SearchAction {
 
     @Override
     public Double getCost() {
-        return 0d;
+        return 30d;
     }
 
     @Override
