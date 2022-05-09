@@ -460,8 +460,7 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
         return this.jardin[posicionAExaminar.fila][posicionAExaminar.columna].cantidadDeSoles;
     }
 
-    // BUSQUEDA EN AMPLITUD
-
+    // BUSQUEDA EN AMPLITUDD
     // public Boolean objetivoCumplido() {
     // Boolean objetivoVariable = false;
     // if (this.energia > this.vidaZombiesPercibidos && this.energia > 10 &&
@@ -490,16 +489,15 @@ public class RepolloBoxeadorAgentState extends SearchBasedAgentState {
     // return this.energia > 0 && objetivoVariable;
     // }
 
+    // BUSQUEDA AVARA
     public Boolean objetivoCumplido() {
-        Boolean heuristicaCero = (this.girasolesRestantesPrimerColumna() + this.todasLasFilasVisitadasHeuristica()
+        Boolean heuristicaCero = (this.girasolesRestantesPrimerColumna() +
+                this.todasLasFilasVisitadasHeuristica()
                 + this.zombiesRestantesPorMatarHeuristica()) == 0;
         return this.energia > 0 && heuristicaCero;
     }
 
     public Integer girasolesRestantesPrimerColumna() {
-        // if (this.deboMatarZombie) {
-        // return 0;
-        // }
         Integer girasolesRestantes = 5;
         for (int fila = JardinEnvironmentState.PRIMERA_FILA; fila <= JardinEnvironmentState.ULTIMA_FILA; fila++) {
             if (this.jardin[fila][JardinEnvironmentState.PRIMERA_COLUMNA].girasol != null)
